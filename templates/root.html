@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Main Page</title>
+
+    <!-- Bootstrap CSS & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+        /* Header Styling */
+        .custom-header {
+            background: linear-gradient(135deg, #0a0f1d 0%, #161c2d 100%);
+            color: #ffffff;
+            padding: 6px 30px;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            min-height: 50px;
+        }
+
+        /* Shield Icon Styling */
+        .header-logo {
+            font-size: 32px;
+            color: #f1c40f;
+            margin-right: 12px;
+            margin-left: 38px;
+        }
+
+        /* Header Text Container */
+        .header-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-top: 6px;
+        }
+
+        /* Main Heading */
+        .header-text h1 {
+            font-size: 12px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Subheading */
+        .header-text p {
+            font-size: 7px;
+            font-weight: 300;
+            color: #f1c40f;
+            margin: 0;
+        }
+
+        /* Button Styling */
+        .custom-btn {
+            margin-top: 20px;
+            background-color: #f1c40f;
+            border: none;
+            color: #161c2d;
+            font-weight: bold;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .custom-btn:hover {
+            background-color: #d4ac0d;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Custom Header -->
+    <header class="custom-header">
+        <i class="fas fa-shield-alt header-logo"></i>
+        <div class="header-text">
+            <h1>Safety Compliance Detection System</h1>
+            <p>Computer Vision | AI | Machine Learning</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container text-center mt-5" style="font-family: 'SF Pro Display', sans-serif;">
+        <h2 class="display-1 align-middle">YoloV8 App</h2>
+        <form action="/FrontPage" target="_blank">
+            <input type="submit" value="Main Page" class="custom-btn"/>
+        </form>
+    </div>
+
+</body>
+</html>
