@@ -73,7 +73,7 @@ def plot_one_boxCustom(x, img, color=None, label=None, line_thickness=3):
     except:
         pass
 
-def video_detection(path_x='', conf_=0.25, is_webcam=False):
+def video_detection(path_x='', conf_=0.25, is_webcam=False, use_cuda=False):
     names = ['face_nomask', 'face_wmask', 'hand_noglove',
              'hand_wglove', 'head_nohelmet', 'head_whelmet', 'person', 'vest']
     colors = [[random.randint(0, 255) for _ in range(3)] for _ in names]
@@ -85,7 +85,7 @@ def video_detection(path_x='', conf_=0.25, is_webcam=False):
         tracker=asone.BYTETRACK,
         detector=asone.YOLOV8N_PYTORCH,
         weights="best.pt",
-        use_cuda=False
+        use_cuda=use_cuda
     )
     tracker = EuclideanDistTracker()
     output_file_path = os.path.join('data', 'tracking_results.txt')

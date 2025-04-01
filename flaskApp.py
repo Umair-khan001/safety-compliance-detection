@@ -42,7 +42,7 @@ class UploadFileForm(FlaskForm):
 detect_count = 0
 safe_count = 0
 
-def generate_frames(path_x='', conf_=0.25):
+def generate_frames(path_x='', conf_=0.25, use_cuda=False):
     global detect_count, safe_count
     # If path_x is 0, then use webcam mode.
     if path_x == 0:
@@ -52,7 +52,7 @@ def generate_frames(path_x='', conf_=0.25):
             if not ret:
                 break
             # Process the current frame (pass is_webcam=True)
-            yolo_output = video_detection(frame, conf_, is_webcam=True)
+            yolo_output = video_detection(frame, conf_, is_webcam=True, use_cuda=use_cuda)
             for detection_, d_count, s_count in yolo_output:
                 detect_count = str(d_count)
                 safe_count = str(s_count)
@@ -63,7 +63,7 @@ def generate_frames(path_x='', conf_=0.25):
         cap.release()
     else:
         # Process the uploaded video (path_x is file path)
-        yolo_output = video_detection(path_x, conf_)
+        yolo_output = video_detection(path_x, conf_, use_cuda=use_cuda)
         for detection_, d_count, s_count in yolo_output:
             detect_count = str(d_count)
             safe_count = str(s_count)
@@ -95,14 +95,19 @@ def front():
 
 @app.route('/video')
 def video():
+    # Use default confidence if not set
+    conf_val = session.get('conf_')
+    if conf_val is None:
+        conf_val = 25
     return Response(generate_frames(path_x=session.get('video_path', None),
-                                      conf_=round(float(session.get('conf_', None))/100, 2)),
+                                      conf_=round(float(conf_val)/100, 2),
+                                      use_cuda=session.get('use_cuda', False)),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/webcam_feed')
 def webcam_feed():
     # For webcam, pass 0 as path_x to signal webcam mode.
-    return Response(generate_frames(path_x=0, conf_=0.25),
+    return Response(generate_frames(path_x=0, conf_=0.25, use_cuda=session.get('use_cuda', False)),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/graphData')
@@ -129,6 +134,41 @@ def tracker_logs():
     else:
         logs = "No logs available yet."
     return logs
+
+@app.route('/toggle_cuda')
+def toggle_cuda():
+    import torch
+    use_cuda = session.get('use_cuda', False)
+    # Toggle: if already enabled, disable it
+    if use_cuda:
+         session['use_cuda'] = False
+         print("CUDA disabled")
+         return jsonify(use_cuda=False)
+    else:
+         # Check if GPU support is available
+         if torch.cuda.is_available():
+              session['use_cuda'] = True
+              print("CUDA enabled")
+              return jsonify(use_cuda=True)
+         else:
+              session['use_cuda'] = False
+              print("CUDA not supported on this device.")
+              return jsonify(error="CUDA not supported on this device.", use_cuda=False)
+
+# New endpoint to reset detection counts and other state to default.
+@app.route('/reset_counts')
+def reset_counts():
+    global detect_count, safe_count
+    detect_count = 0
+    safe_count = 0
+    # Optionally, clear any tracking logs here if needed.
+    # For example:
+    output_file_path = os.path.join('data', 'tracking_results.txt')
+    if os.path.exists(output_file_path):
+        with open(output_file_path, 'w') as f:
+            f.write("")
+    print("Counts and logs reset to default")
+    return jsonify(success=True)
 
 if __name__ == "__main__":
     app.run(debug=True)
