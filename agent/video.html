@@ -1,0 +1,2288 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Safety Compliance Detection System</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+      function outputUpdate(conf_slide) {
+        Number(document.querySelector('#selected-conf').value) = conf_slide.toFixed(2);
+      }
+    </script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+
+      /* CSS Reset and Global Styles */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --blue-400: #60a5fa;
+        --blue-500: #3b82f6;
+        --blue-600: #2563eb;
+        --blue-700: #1d4ed8;
+        --purple-400: #c084fc;
+        --purple-500: #a855f7;
+        --purple-600: #9333ea;
+        --purple-700: #7e22ce;
+        --indigo-500: #6366f1;
+        --indigo-600: #4f46e5;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --gray-900: #111827;
+        --green-400: #4ade80;
+        --green-500: #22c55e;
+        --red-500: #ef4444;
+        --pink-400: #f472b6;
+        --pink-500: #ec4899;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", "Poppins", sans-serif;
+        line-height: 1.5;
+        background: linear-gradient(
+          to bottom,
+          var(--gray-900),
+          var(--gray-800),
+          var(--gray-900)
+        );
+        color: white;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* Dark/light theme adaptations */
+      body[data-theme="light"] {
+        background: linear-gradient(to bottom, #f8fafc, #f1f5f9, #f8fafc);
+        color: #1e293b;
+      }
+
+      /* Theme and mood variables */
+      body[data-mood="original"] {
+        --primary-gradient: linear-gradient(
+          to right,
+          var(--blue-400),
+          var(--purple-500)
+        );
+        --secondary-gradient: linear-gradient(
+          to right,
+          var(--blue-600),
+          var(--blue-700)
+        );
+        --accent-color: var(--blue-500);
+      }
+
+      body[data-mood="calm"] {
+        --primary-gradient: linear-gradient(45deg, #3b82f6, #6366f1);
+        --secondary-gradient: linear-gradient(to right, #60a5fa, #a5b4fc);
+        --accent-color: #3b82f6;
+      }
+
+      body[data-mood="focused"] {
+        --primary-gradient: linear-gradient(45deg, #10b981, #3b82f6);
+        --secondary-gradient: linear-gradient(to right, #34d399, #60a5fa);
+        --accent-color: #10b981;
+      }
+
+      body[data-mood="creative"] {
+        --primary-gradient: linear-gradient(45deg, #8b5cf6, #ec4899);
+        --secondary-gradient: linear-gradient(to right, #a78bfa, #f472b6);
+        --accent-color: #8b5cf6;
+      }
+
+      /* Custom Header Styling (fixed) */
+      /* Header Styling */
+      .custom-header {
+        background: linear-gradient(135deg, #0a0f1d 0%, #161c2d 100%);
+        color: #ffffff;
+        padding: 6px 30px;
+        font-family: "Poppins", sans-serif;
+        display: flex;
+        align-items: center;
+        min-height: 50px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1100;
+        border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+      }
+
+      /* Light theme header */
+      body[data-theme="light"] .custom-header {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+      }
+
+      /* Shield Icon Styling */
+      .header-logo {
+        font-size: 32px;
+        /* color: #f1c40f; */
+        color: var(--blue-400);
+        margin-right: 12px;
+        margin-left: 38px;
+        text-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+        transition: color 0.3s ease;
+      }
+
+      /* Header Text Container */
+      .header-text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-top: 6px;
+      }
+
+      /* Main Heading */
+      .header-text h1 {
+        font-size: 12px;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      body[data-theme="light"] .header-text h1 {
+        color: #1e293b;
+      }
+
+      /* Subheading */
+      .header-text p {
+        font-size: 7px;
+        font-weight: 300;
+        color: #f1c40f;
+        margin: 0;
+      }
+
+      body[data-mood="focused"] .header-logo {
+        color: #10b981;
+      }
+
+      body[data-mood="creative"] .header-logo {
+        color: #8b5cf6;
+      }
+
+      /* Header Text Container */
+      .header-text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-top: 6px !important;
+      }
+
+      /* Main Heading */
+      .header-text h1 {
+        font-size: 16px !important;
+        font-weight: 600;
+        margin: 0;
+        background: linear-gradient(
+          to right,
+          var(--blue-400),
+          var(--purple-500)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+      }
+
+      /* Adjust gradient based on mood */
+      body[data-mood="original"] .header-text h1 {
+        background: linear-gradient(
+          to right,
+          var(--blue-400),
+          var(--purple-500)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      body[data-mood="calm"] .header-text h1 {
+        background: linear-gradient(45deg, #3b82f6, #6366f1);
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      body[data-mood="focused"] .header-text h1 {
+        background: linear-gradient(45deg, #10b981, #3b82f6);
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      body[data-mood="creative"] .header-text h1 {
+        background: linear-gradient(45deg, #8b5cf6, #ec4899);
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      /* Subheading */
+      .header-text p {
+        font-size: 9px !important;
+        font-weight: 300;
+        color: var(--gray-300);
+        margin: 2px 0 0 0;
+      }
+
+      body[data-theme="light"] .header-text p {
+        color: #64748b;
+      }
+
+      /* Adjust main content top margin to account for fixed header */
+      .main-content {
+        margin-top: 70px;
+        padding: 1rem;
+        font-family: "SF Pro Display", sans-serif;
+        margin-bottom: 30px;
+      }
+
+      /* Background with overlay */
+      /* .bg-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        opacity: 0.2;
+        filter: blur(8px);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-image: url("https://images.unsplash.com/photo-1541185934-01b600ea069c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&h=900&q=80");
+      }
+
+      .bg-overlay::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(
+          to top right,
+          rgba(0, 0, 0, 0.8),
+          rgba(31, 41, 55, 0.7),
+          rgba(37, 99, 235, 0.5)
+        );
+      } */
+
+      /* Cursor trail styles */
+      .cursor-trail-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+        overflow: hidden;
+      }
+
+      .cursor-trail {
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        background: var(
+          --primary-gradient,
+          linear-gradient(to right, var(--blue-400), var(--purple-500))
+        );
+        border-radius: 50%;
+        filter: blur(8px);
+        opacity: 0.6;
+        transform: translate(-50%, -50%);
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+      }
+
+      /* Theme toggle and mood selector combined styles */
+      .theme-toggle-container {
+        position: fixed;
+        right: 20px;
+        bottom: 70px;
+        z-index: 1100;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(17, 24, 39, 0.7);
+        border-radius: 20px;
+        padding: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(5px);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        width: 50px;
+        overflow: hidden;
+      }
+
+      body[data-theme="light"] .theme-toggle-container {
+        background: rgba(248, 250, 252, 0.7);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .theme-toggle-container:hover,
+      .theme-toggle-container.active {
+        width: auto;
+        padding: 15px;
+      }
+
+      .theme-checkbox {
+        opacity: 0;
+        position: absolute;
+      }
+
+      .theme-label {
+        width: 50px;
+        height: 26px;
+        background-color: #111827;
+        display: flex;
+        border-radius: 50px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 5px;
+        position: relative;
+        transform: scale(1);
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      body[data-theme="light"] .theme-label {
+        background-color: #e5e7eb;
+      }
+
+      .theme-label .ball {
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .theme-checkbox:checked + .theme-label .ball {
+        transform: translateX(24px);
+      }
+
+      .theme-label .fa-moon {
+        color: #f1c40f;
+      }
+
+      .theme-label .fa-sun {
+        color: #f39c12;
+      }
+
+      /* Mood options within theme toggle container */
+      .mood-option {
+        font-family: "Poppins", sans-serif;
+        font-size: 0.85rem;
+        padding: 6px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        user-select: none;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        color: var(--gray-300);
+        text-align: center;
+        width: 100%;
+        margin-top: 8px;
+        display: none;
+      }
+
+      .theme-toggle-container:hover .mood-option,
+      .theme-toggle-container.active .mood-option {
+        display: block;
+      }
+
+      /* Dark/light theme adaptations */
+      /* body[data-theme="light"] .bg-overlay {
+        background: linear-gradient(to bottom, rgba(248, 250, 252, 0.7), rgba(241, 245, 249, 0.9));
+      } */
+
+      body[data-theme="light"] .mood-option {
+        color: #475569;
+      }
+
+      .mood-option::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--primary-gradient);
+        opacity: 0;
+        z-index: -1;
+        transition: opacity 0.3s ease;
+        border-radius: inherit;
+      }
+
+      .mood-option:hover::before {
+        opacity: 0.1;
+      }
+
+      .mood-option.active {
+        color: white;
+        font-weight: 500;
+      }
+
+      body[data-theme="light"] .mood-option.active {
+        color: #1e293b;
+      }
+
+      /* Mood indicator */
+      .mood-indicator {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        z-index: 1100;
+        font-family: "Poppins", sans-serif;
+        font-size: 0.8rem;
+        padding: 6px 12px;
+        border-radius: 20px;
+        background: var(--primary-gradient);
+        color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+      }
+
+      .mood-indicator:hover {
+        opacity: 1;
+        cursor: pointer;
+      }
+
+      /* Credits styling - added as fixed footer */
+      .credits {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 10px 20px;
+        background-color: rgba(17, 24, 39, 0.7);
+        backdrop-filter: blur(5px);
+        text-align: center;
+        color: var(--gray-300);
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        z-index: 9999;
+        border-top: 1px solid rgba(55, 65, 81, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      body[data-theme="light"] .credits {
+        background-color: rgba(248, 250, 252, 0.7);
+        border-top: 1px solid rgba(226, 232, 240, 0.5);
+        color: #475569;
+      }
+
+      .credits a {
+        font-size: 14px;
+        color: var(--accent-color, #3b82f6);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+        margin: 0 5px;
+      }
+
+      .credits a:hover {
+        color: var(--purple-500);
+        text-decoration: underline;
+      }
+
+      /* .heart-icon {
+        color: #ef4444;
+        margin: 0 5px;
+        animation: heartbeat 1.5s ease-in-out infinite;
+      }
+
+      @keyframes heartbeat {
+        0% { transform: scale(1); }
+        25% { transform: scale(1.1); }
+        50% { transform: scale(1); }
+        75% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+      } */
+
+      .heart-icon {
+        color: #ef4444;
+        margin: 0 5px;
+        animation:
+          heartbeat 1.5s ease-in-out infinite,
+          colorchange 3s linear infinite;
+      }
+
+      @keyframes heartbeat {
+        0%,
+        50%,
+        100% {
+          transform: scale(1);
+        }
+        25%,
+        75% {
+          transform: scale(1.1);
+        }
+      }
+
+      @keyframes colorchange {
+        0%,
+        100% {
+          color: #ef4444;
+        } /* Red */
+        20% {
+          color: #9333ea;
+        } /* Purple */
+        40% {
+          color: #06b6d4;
+        } /* Cyan */
+        60% {
+          color: #10b981;
+        } /* Green */
+        80% {
+          color: #ec4899;
+        } /* Pink */
+      }
+    </style>
+
+    <style>
+      @import url("https://fonts.cdnfonts.com/css/sf-pro-display");
+    </style>
+
+    <style>
+      input::file-selector-button {
+        font-weight: bold;
+        color: white;
+        background-color: black;
+        padding: 0.5em;
+        border: thin solid grey;
+        border-radius: 15px;
+        display: inline-block;
+        font-size: 1.2rem;
+        line-height: 1.5;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: 0.375rem 0.75rem;
+        transition:
+          color 0.15s ease-in-out,
+          background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out,
+          box-shadow 0.15s ease-in-out;
+        color: #fff;
+        background-color: #212529;
+        border-color: #212529;
+      }
+      .btndarkCustom {
+        color: #fff;
+        background-color: #212529;
+        border-color: #212529;
+      }
+      .btnCustom {
+        display: inline-block;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        background-color: white;
+        border: 1px;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        border-radius: 15px;
+        transition:
+          color 0.15s ease-in-out,
+          background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out,
+          box-shadow 0.15s ease-in-out;
+      }
+      .progress-barCustom {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow: hidden;
+        color: rgb(0, 0, 0);
+        text-align: center;
+        white-space: nowrap;
+        background-color: #000000;
+        transition: width 0.6s ease;
+      }
+      /* Chrome slider styles */
+      @media screen and (-webkit-min-device-pixel-ratio: 0.3) {
+        input[type="range"] {
+          overflow: hidden;
+          width: 150px;
+          appearance: none;
+          -webkit-appearance: none;
+          background-color: #eeecef;
+          border-radius: 10px;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+          height: 20px;
+          -webkit-appearance: none;
+          color: #282828;
+          margin-top: 0px;
+          border-radius: 10px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+          width: 20px;
+          -webkit-appearance: none;
+          height: 20px;
+          cursor: ew-resize;
+          background: #8876fe;
+          box-shadow: -80px 0 0 72px #282828;
+          border-radius: 10px;
+        }
+      }
+      /* FF slider styles */
+      input[type="range"]::-moz-range-progress {
+        background-color: #000000;
+      }
+      input[type="range"]::-moz-range-track {
+        background-color: #9a905d;
+      }
+      /* IE slider styles */
+      input[type="range"]::-ms-fill-lower {
+        background-color: #000000;
+      }
+      input[type="range"]::-ms-fill-upper {
+        background-color: #9a905d;
+      }
+      .iconClass {
+        width: 100%;
+      }
+    </style>
+
+    <style>
+      /* Toggle Panel styling (vertical, circles, animated) */
+      #togglePanel {
+        position: fixed;
+        top: 90px; /* Position adjusted since theme toggle is now at bottom */
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        z-index: 1100;
+      }
+      /* Each toggle container holds the button and its alert */
+      .toggle-container {
+        position: relative;
+        display: inline-block;
+      }
+      .toggle-btn {
+        background: rgba(31, 41, 55, 0.7);
+        border: 1px solid rgba(55, 65, 81, 0.5);
+        color: var(--gray-300);
+        font-size: 1rem;
+        cursor: pointer;
+        padding: 12px;
+        border-radius: 50%;
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        animation: float 3s ease-in-out infinite;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px); /* Safari support */
+        position: relative;
+      }
+
+      /* Tooltip for toggle buttons */
+      .toggle-btn::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        right: calc(100% + 10px);
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(17, 24, 39, 0.9);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 10;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        pointer-events: none;
+      }
+
+      .toggle-btn:hover::after {
+        opacity: 1;
+        visibility: visible;
+        right: calc(100% + 15px);
+      }
+
+      body[data-theme="light"] .toggle-btn::after {
+        background: rgba(248, 250, 252, 0.9);
+        color: #1e293b;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      body[data-theme="light"] .toggle-btn {
+        background: rgba(248, 250, 252, 0.7);
+        border: 1px solid rgba(226, 232, 240, 0.5);
+        color: #475569;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .toggle-btn:hover {
+        transform: translateY(-5px) scale(1.1);
+        color: var(--accent-color);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      body[data-theme="light"] .toggle-btn:hover {
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .toggle-btn.active {
+        color: var(--accent-color);
+        background: var(--gray-800);
+        border-color: var(--accent-color);
+      }
+
+      body[data-theme="light"] .toggle-btn.active {
+        background: white;
+        border-color: var(--accent-color);
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      /* Custom Alert for toggles: positioned to the left of the icon with a small gap */
+      .toggle-alert {
+        display: none;
+        position: absolute;
+        top: 50%;
+        right: calc(100% + 12px);
+        transform: translateY(-50%);
+        background: rgba(17, 24, 39, 0.9);
+        color: var(--gray-300);
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-family: "Poppins", sans-serif;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        z-index: 1200;
+        border: 1px solid rgba(55, 65, 81, 0.5);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px); /* Safari support */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      body[data-theme="light"] .toggle-alert {
+        background: rgba(248, 250, 252, 0.9);
+        color: #475569;
+        border: 1px solid rgba(226, 232, 240, 0.5);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Video container styling */
+      #videoContainer {
+        padding: 10px;
+        display: block;
+        border-radius: 24px;
+        max-width: 500px;
+        max-height: 500px;
+        margin: auto;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        background: rgba(17, 24, 39, 0.4);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px); /* Safari support */
+      }
+
+      body[data-theme="light"] #videoContainer {
+        background: rgba(248, 250, 252, 0.4);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      }
+
+      .loaded-border {
+        border: 2px solid var(--accent-color, #3b82f6);
+      }
+
+      /* Graph container styling */
+      #graphContainer {
+        margin: 30px auto;
+        width: 800px;
+        height: 400px;
+        background: rgba(17, 24, 39, 0.6);
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(55, 65, 81, 0.5);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px); /* Safari support */
+        transition: all 0.3s ease-in-out;
+      }
+
+      body[data-theme="light"] #graphContainer {
+        background: rgba(248, 250, 252, 0.8);
+        border: 1px solid rgba(226, 232, 240, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      }
+
+      #graphContainer h3 {
+        text-align: center;
+        color: var(--accent-color, #3b82f6);
+        margin-bottom: 15px;
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 1.25rem;
+        border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+        padding-bottom: 8px;
+        transition: color 0.3s ease;
+      }
+
+      body[data-theme="light"] #graphContainer h3 {
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      }
+
+      .separator {
+        width: 50%;
+        height: 2px;
+        background: var(
+          --primary-gradient,
+          linear-gradient(to right, var(--blue-400), var(--purple-500))
+        );
+        margin: 30px auto 15px;
+        border-radius: 2px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .separator::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(255, 255, 255, 0.5),
+          transparent
+        );
+        animation: shimmer 2s infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          left: -100%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+
+      #graphSection {
+        display: none;
+        margin-bottom: 80px;
+        transition: all 0.5s ease-in-out;
+      }
+
+      #logsSeparator {
+        width: 50%;
+        height: 2px;
+        background: var(
+          --primary-gradient,
+          linear-gradient(to right, var(--blue-400), var(--purple-500))
+        );
+        margin: 30px auto 15px;
+        border-radius: 2px;
+        display: none;
+        position: relative;
+        overflow: hidden;
+      }
+
+      #logsSeparator::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(255, 255, 255, 0.5),
+          transparent
+        );
+        animation: shimmer 2s infinite;
+      }
+      #logsSection {
+        width: 800px;
+        margin: 20px auto;
+        border: 1px solid rgba(55, 65, 81, 0.5);
+        border-radius: 16px;
+        padding: 20px;
+        background: rgba(17, 24, 39, 0.6);
+        display: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px); /* Safari support */
+        transition: all 0.3s ease-in-out;
+      }
+
+      body[data-theme="light"] #logsSection {
+        background: rgba(248, 250, 252, 0.8);
+        border: 1px solid rgba(226, 232, 240, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      }
+
+      #logsSection h3 {
+        text-align: center;
+        color: var(--accent-color, #3b82f6);
+        margin-bottom: 15px;
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 1.25rem;
+        border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+        padding-bottom: 8px;
+        transition: color 0.3s ease;
+      }
+
+      body[data-theme="light"] #logsSection h3 {
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      }
+
+      #logsHeader {
+        display: flex;
+        justify-content: space-between;
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        text-align: center;
+        color: white;
+        margin-bottom: 12px;
+        padding: 8px;
+        border-radius: 8px;
+        background: rgba(31, 41, 55, 0.7);
+        border: 1px solid rgba(55, 65, 81, 0.7);
+      }
+
+      body[data-theme="light"] #logsHeader {
+        background: rgba(241, 245, 249, 0.9);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        color: #1e293b;
+      }
+
+      .colHeader {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        margin: 0 3px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      /* Existing header styles */
+      .colFrame {
+        background: linear-gradient(45deg, #ff4d4d, #ff6b6b);
+      }
+      .colID {
+        background: linear-gradient(45deg, #4dff4d, #66ff66);
+      }
+      .colX {
+        background: linear-gradient(45deg, #4d4dff, #6666ff);
+      }
+      .colY {
+        background: linear-gradient(45deg, #bf40bf, #d670d6);
+      }
+      .colWidth {
+        background: linear-gradient(45deg, #ff944d, #ffad6b);
+      }
+      .colHeight {
+        background: linear-gradient(45deg, #40e0d0, #5beadb);
+      }
+
+      /* New header styles - using similar gradients */
+      .colConfidence {
+        background: linear-gradient(45deg, #ffd700, #ffec8b);
+      } /* Gold/Yellow */
+      .colClassName {
+        background: linear-gradient(45deg, #1e90ff, #87cefa);
+      } /* Dodger Blue/Light Sky Blue */
+      .colHelmet {
+        background: linear-gradient(45deg, #a020f0, #da70d6);
+      } /* Purple/Orchid */
+      .colMask {
+        background: linear-gradient(45deg, #00ced1, #40e0d0);
+      } /* Dark Cyan/Turquoise */
+      .colVest {
+        background: linear-gradient(45deg, #32cd32, #98fb98);
+      } /* Lime Green/Pale Green */
+      .colCompliance {
+        background: linear-gradient(45deg, #ff4500, #ffa07a);
+      } /* Orange Red/Light Salmon */
+
+      #trackerLogsContent {
+        overflow-y: scroll;
+        max-height: 300px;
+        white-space: nowrap;
+        font-family: "JetBrains Mono", monospace, "Courier New";
+        padding: 10px;
+        border-top: 1px solid rgba(55, 65, 81, 0.5);
+        background: rgba(31, 41, 55, 0.4);
+        border-radius: 0 0 10px 10px;
+      }
+
+      body[data-theme="light"] #trackerLogsContent {
+        background: rgba(241, 245, 249, 0.6);
+        border-top: 1px solid rgba(226, 232, 240, 0.8);
+      }
+
+      .logRow {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 8px;
+        font-size: 0.85rem;
+        border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+        transition: background-color 0.2s ease;
+      }
+
+      .logRow:hover {
+        background-color: rgba(55, 65, 81, 0.2);
+      }
+
+      body[data-theme="light"] .logRow {
+        border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+      }
+
+      body[data-theme="light"] .logRow:hover {
+        background-color: rgba(241, 245, 249, 0.8);
+      }
+
+      .logCell {
+        flex: 1;
+        text-align: center;
+        padding: 0 4px;
+      }
+
+      /* Export Buttons Styling */
+      .export-buttons {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+
+      .export-button {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin: 0 5px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-family: "Poppins", sans-serif;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .export-button:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      body[data-theme="light"] .export-button {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      body[data-theme="light"] .export-button:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Custom Alert/Tooltip for export */
+      #exportAlert {
+        display: none;
+        position: fixed;
+        top: 36%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(17, 24, 39, 0.9);
+        color: var(--gray-300);
+        padding: 15px 25px;
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        white-space: nowrap;
+        z-index: 1500; /* Above other elements */
+        border: 1px solid rgba(55, 65, 81, 0.5);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px); /* Safari support */
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      body[data-theme="light"] #exportAlert {
+        background: rgba(248, 250, 252, 0.9);
+        color: #475569;
+        border: 1px solid rgba(226, 232, 240, 0.5);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Authentication Form Styles */
+      .auth-tab.active {
+        color: white !important;
+        border-bottom-color: var(--blue-400) !important;
+      }
+
+      body[data-theme="light"] .auth-tab.active {
+        color: #1e293b !important;
+      }
+
+      .auth-tab:hover {
+        color: var(--blue-400);
+        border-bottom-color: rgba(96, 165, 250, 0.5);
+      }
+
+      .auth-container .form-control:focus {
+        outline: none;
+        border-color: var(--blue-400);
+        box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+      }
+
+      .auth-container button:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      body[data-theme="light"] .auth-container {
+        background: rgba(248, 250, 252, 0.7);
+        border: 1px solid rgba(226, 232, 240, 0.5);
+      }
+
+      body[data-theme="light"] .auth-container h2 {
+        color: #1e293b;
+      }
+
+      body[data-theme="light"] .auth-container p {
+        color: #64748b;
+      }
+
+      body[data-theme="light"] .auth-container .form-control {
+        background: rgba(241, 245, 249, 0.8);
+        border: 1px solid rgba(203, 213, 225, 0.8);
+        color: #1e293b;
+      }
+
+      body[data-theme="light"] .auth-container label {
+        color: #1e293b;
+      }
+
+      /* Flash message styles */
+      .flash-message-error {
+        padding: 12px 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #ef4444;
+      }
+
+      .flash-message-success {
+        padding: 12px 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        color: #22c55e;
+      }
+    </style>
+
+    <script>
+      let chart = null;
+      let isWebcamActive = false;
+
+      function onVideoLoad() {
+        // When the video feed loads, add green border and show container.
+        document
+          .getElementById("videoContainer")
+          .classList.add("loaded-border");
+        document.getElementById("videoContainer").style.display = "block";
+      }
+
+      $(document).ready(function () {
+        // Webcam Toggle with custom alert and smooth delay/animation
+        $("#webcamToggle").click(function () {
+          let $alert = $(this).siblings(".toggle-alert");
+          if (isWebcamActive) {
+            $alert.text("Please wait, disabling webcam feed…").fadeIn(600);
+            // Smoothly slide up the video container then reset source to fallback image
+            setTimeout(function () {
+              $("#videoContainer").slideUp(600, function () {
+                $(this).removeClass("loaded-border").css("display", "none");
+                $("#videoFeed").attr("src", "../static/files/Black.png");
+              });
+              $("#detectCount").text("0");
+              $("#safecount").text("0");
+              isWebcamActive = false;
+              $alert.fadeOut(600);
+            }, 200);
+            $(this).removeClass("active");
+          } else {
+            $alert.text("Please wait, enabling webcam feed…").fadeIn(600);
+            // Smoothly load the webcam feed and then slide down the container
+            setTimeout(function () {
+              $("#videoFeed").attr("src", "/webcam_feed");
+              isWebcamActive = true;
+              $alert.fadeOut(600);
+              $("html, body").animate(
+                {
+                  scrollTop: $("#videoContainer").offset().top - 70,
+                },
+                600,
+              );
+            }, 200);
+            $(this).addClass("active");
+          }
+        });
+
+        // Graph Toggle with custom alert, smooth delay/animation, and auto-scroll
+        $("#graphToggle").click(function () {
+          let $alert = $(this).siblings(".toggle-alert");
+          if ($(this).hasClass("active")) {
+            $alert.text("Please wait, disabling detection graph…").fadeIn(600);
+          } else {
+            $alert.text("Please wait, enabling detection graph…").fadeIn(600);
+          }
+          setTimeout(function () {
+            $("#graphSection").slideToggle(600, function () {
+              if ($(this).is(":visible")) {
+                $("html, body").animate(
+                  {
+                    scrollTop: $("#graphSection").offset().top - 70,
+                  },
+                  600,
+                );
+              }
+            });
+            if ($("#graphSection").is(":visible") && chart === null) {
+              initializeChart();
+            }
+            $alert.fadeOut(600);
+          }, 200);
+          $(this).toggleClass("active");
+        });
+
+        // Logs Toggle with custom alert, smooth delay/animation, and auto-scroll
+        $("#logsToggle").click(function () {
+          let $alert = $(this).siblings(".toggle-alert");
+          if ($(this).hasClass("active")) {
+            $alert.text("Please wait, disabling tracking logs…").fadeIn(600);
+          } else {
+            $alert.text("Please wait, enabling tracking logs…").fadeIn(600);
+          }
+          setTimeout(function () {
+            $("#logsSeparator").slideToggle(600);
+            $("#logsSection").slideToggle(600, function () {
+              if ($(this).is(":visible")) {
+                $("html, body").animate(
+                  {
+                    scrollTop: $("#logsSection").offset().top - 70,
+                  },
+                  600,
+                );
+              }
+            });
+            $alert.fadeOut(600);
+          }, 200);
+          $(this).toggleClass("active");
+        });
+
+        // CUDA Toggle with custom alert and AJAX
+        $("#cudaToggle").click(function () {
+          let $alert = $(this).siblings(".toggle-alert");
+          if ($(this).hasClass("active")) {
+            $alert.text("Please wait, disabling CUDA…").fadeIn(600);
+          } else {
+            $alert.text("Please wait, enabling CUDA…").fadeIn(600);
+          }
+          $.getJSON($SCRIPT_ROOT + "/toggle_cuda", function (data) {
+            if (data.error) {
+              $alert.text(data.error).delay(2000).fadeOut(600);
+              $("#cudaToggle").removeClass("active");
+            } else {
+              if (data.use_cuda) {
+                $alert.text("CUDA enabled").delay(200).fadeOut(600);
+                $("#cudaToggle").addClass("active");
+              } else {
+                $alert.text("CUDA disabled").delay(200).fadeOut(600);
+                $("#cudaToggle").removeClass("active");
+              }
+            }
+          });
+        });
+
+        // Reset Toggle with custom alert and smooth delay/animation
+        $("#resetToggle").click(function () {
+          let $alert = $(this).siblings(".toggle-alert");
+          $alert.text("Please wait, resetting to default…").fadeIn(600);
+          // Call the backend to reset detection counts
+          $.getJSON($SCRIPT_ROOT + "/reset_counts", function (data) {
+            // Assume the endpoint resets detection count & safe count on server side.
+          });
+          setTimeout(function () {
+            // Reset video feed back to fallback image and hide video container
+            $("#videoContainer").slideUp(600, function () {
+              $(this).removeClass("loaded-border").css("display", "none");
+              $("#videoFeed").attr("src", "../static/files/Black.png");
+            });
+            // Reset detection counts in UI
+            $("#detectCount").text("0");
+            $("#safecount").text("0");
+            // Hide Graph and Logs sections if visible
+            $("#graphSection").slideUp(600);
+            $("#logsSeparator").slideUp(600);
+            $("#logsSection").slideUp(600);
+            // Remove active state from all toggle buttons
+            $(".toggle-btn").removeClass("active");
+            $alert.fadeOut(600);
+            // Auto-scroll to top
+            $("html, body").animate({ scrollTop: 0 }, 600);
+          }, 200);
+        });
+
+        // Export Logs Button Listeners
+        $("#exportJsonBtn").click(function () {
+          exportLogs("json");
+        });
+
+        $("#exportExcelBtn").click(function () {
+          exportLogs("excel"); // Changed from xml
+        });
+      });
+
+      function initializeChart() {
+        const ctx = document.getElementById("detectionChart").getContext("2d");
+        chart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "Total Detections",
+                data: [],
+                borderColor: "rgb(255, 99, 132)",
+                tension: 0.1,
+                fill: false,
+              },
+              {
+                label: "Safe Persons",
+                data: [],
+                borderColor: "rgb(54, 162, 235)",
+                tension: 0.1,
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { beginAtZero: true },
+              x: {
+                ticks: {
+                  callback: function (value) {
+                    return value;
+                  },
+                },
+              },
+            },
+          },
+        });
+        setInterval(() => {
+          $.getJSON("/graphData", function (data) {
+            if (chart.data.labels.length >= 30) {
+              chart.data.labels.shift();
+              chart.data.datasets[0].data.shift();
+              chart.data.datasets[1].data.shift();
+            }
+            chart.data.labels.push(new Date().toLocaleTimeString());
+            chart.data.datasets[0].data.push(data.total);
+            chart.data.datasets[1].data.push(data.safe);
+            chart.update();
+          });
+        }, 1000);
+      }
+
+      function updateLogs() {
+        $.get($SCRIPT_ROOT + "/tracker_logs", function (data) {
+          let lines = data.split("\n").filter((l) => l.trim() !== "");
+          let html = "";
+          // Skip the header row when parsing logs for display
+          const headers = lines.length > 0 ? lines[0].split(",") : [];
+          if (lines.length > 0 && lines[0].startsWith("frame_number")) {
+            lines = lines.slice(1);
+          }
+
+          lines.forEach(function (line) {
+            let cols = line.split(",");
+            // Ensure we have enough columns for the new data
+            if (cols.length >= 12) {
+              // 12 columns based on the new log format
+              html += "<div class='logRow'>";
+              html +=
+                "<div class='logCell'>" +
+                (cols[0] ? cols[0].trim() : "") +
+                "</div>"; // frame_number
+              html +=
+                "<div class='logCell'>" +
+                (cols[1] ? cols[1].trim() : "") +
+                "</div>"; // obj_id
+              html +=
+                "<div class='logCell'>" +
+                (cols[2] ? cols[2].trim() : "") +
+                "</div>"; // x
+              html +=
+                "<div class='logCell'>" +
+                (cols[3] ? cols[3].trim() : "") +
+                "</div>"; // y
+              html +=
+                "<div class='logCell'>" +
+                (cols[4] ? cols[4].trim() : "") +
+                "</div>"; // width
+              html +=
+                "<div class='logCell'>" +
+                (cols[5] ? cols[5].trim() : "") +
+                "</div>"; // height
+              html +=
+                "<div class='logCell'>" +
+                (cols[6] ? cols[6].trim() : "") +
+                "</div>"; // confidence
+              html +=
+                "<div class='logCell'>" +
+                (cols[7] ? cols[7].trim() : "") +
+                "</div>"; // class_name
+              html +=
+                "<div class='logCell'>" +
+                (cols[8] ? cols[8].trim() : "") +
+                "</div>"; // helmet_worn
+              html +=
+                "<div class='logCell'>" +
+                (cols[9] ? cols[9].trim() : "") +
+                "</div>"; // mask_worn
+              html +=
+                "<div class='logCell'>" +
+                (cols[10] ? cols[10].trim() : "") +
+                "</div>"; // vest_worn
+              html +=
+                "<div class='logCell'>" +
+                (cols[11] ? cols[11].trim() : "") +
+                "</div>"; // compliance_status
+              html += "</div>";
+            }
+          });
+          $("#trackerLogsContent").html(html);
+          let tracker = document.getElementById("trackerLogsContent");
+          tracker.scrollTop = tracker.scrollHeight;
+        });
+      }
+      setInterval(updateLogs, 1000);
+
+      function exportLogs(format) {
+        $.get($SCRIPT_ROOT + "/tracker_logs", function (data) {
+          let lines = data.split("\n").filter((l) => l.trim() !== "");
+          if (lines.length <= 1) {
+            // Check if there's only a header or no data
+            alert("No logs to export.");
+            return;
+          }
+
+          const headers = lines[0].split(",");
+          const logEntries = lines.slice(1).map((line) => line.split(","));
+
+          let fileContent;
+          let filename;
+          let mimeType;
+
+          // Show alert before processing
+          const $exportAlert = $("#exportAlert");
+          $exportAlert
+            .text(`Preparing ${format.toUpperCase()} for download...`)
+            .fadeIn(300);
+
+          if (format === "json") {
+            const jsonData = logEntries.map((entry) => {
+              const obj = {};
+              headers.forEach((header, index) => {
+                obj[header.trim()] = entry[index] ? entry[index].trim() : "";
+              });
+              return obj;
+            });
+            fileContent = JSON.stringify(jsonData, null, 2);
+            filename = "tracking_logs.json";
+            mimeType = "application/json";
+          } else if (format === "excel") {
+            // Changed from xml
+            // For Excel export, we'll create a CSV file
+            const csvRows = [];
+            csvRows.push(headers.map((header) => header.trim()).join(",")); // Add header row
+            logEntries.forEach((entry) => {
+              csvRows.push(
+                entry.map((col) => (col ? col.trim() : "")).join(","),
+              ); // Add data rows
+            });
+            fileContent = csvRows.join("\n");
+            filename = "tracking_logs.csv"; // Use .csv extension
+            mimeType = "text/csv"; // Use text/csv mime type
+          } else {
+            $exportAlert
+              .text("Unsupported export format.")
+              .delay(1000)
+              .fadeOut(300);
+            return; // Invalid format
+          }
+
+          const blob = new Blob([fileContent], { type: mimeType });
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          // Hide alert after download is initiated
+          $exportAlert
+            .text(`${format.toUpperCase()} download started...`)
+            .delay(1000)
+            .fadeOut(300);
+        }).fail(function () {
+          // Handle potential errors during the AJAX request
+          $("#exportAlert")
+            .text("Error fetching logs for export.")
+            .delay(1000)
+            .fadeOut(300);
+        });
+      }
+    </script>
+  </head>
+
+  <body
+    data-script-root="{{ request.script_root|tojson|safe }}"
+    data-theme="dark"
+    data-mood="original"
+  >
+    <script>
+      var $SCRIPT_ROOT = document.body.dataset.scriptRoot;
+    </script>
+
+    <div class="cursor-trail-container"></div>
+
+    <header class="custom-header">
+      <i class="fas fa-shield-alt header-logo"></i>
+      <div class="header-text">
+        <h1>Safety Compliance Detection System</h1>
+        <p>Computer Vision | AI | Machine Learning</p>
+      </div>
+      {% if current_user %}
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 15px;">
+        <span style="color: var(--gray-300); font-size: 0.9rem;">Welcome, {{ current_user.first_name }}!</span>
+        <a href="{{ url_for('logout') }}" style="color: var(--blue-400); text-decoration: none; font-size: 0.9rem; padding: 5px 10px; border: 1px solid var(--blue-400); border-radius: 5px; transition: all 0.3s ease;">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+      {% endif %}
+    </header>
+
+    <div class="theme-toggle-container">
+      <input type="checkbox" class="theme-checkbox" id="theme-switch" />
+      <label for="theme-switch" class="theme-label">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun"></i>
+        <div class="ball"></div>
+      </label>
+
+      <div class="mood-option" data-mood="original">Original</div>
+      <div class="mood-option" data-mood="calm">Calm</div>
+      <div class="mood-option" data-mood="focused">Focused</div>
+      <div class="mood-option" data-mood="creative">Creative</div>
+      <div class="mood-option" data-mood="system">System</div>
+    </div>
+
+    {% if current_user %}
+    <div id="togglePanel">
+      <div class="toggle-container">
+        <button id="webcamToggle" class="toggle-btn" data-tooltip="Webcam Feed">
+          <i class="fas fa-video"></i>
+        </button>
+        <div class="toggle-alert"></div>
+      </div>
+      <div class="toggle-container">
+        <button
+          id="graphToggle"
+          class="toggle-btn"
+          data-tooltip="Detection Graph"
+        >
+          <i class="fas fa-chart-line"></i>
+        </button>
+        <div class="toggle-alert"></div>
+      </div>
+      <div class="toggle-container">
+        <button
+          id="logsToggle"
+          class="toggle-btn"
+          data-tooltip="Detection Logs"
+        >
+          <i class="fas fa-clipboard-list"></i>
+        </button>
+        <div class="toggle-alert"></div>
+      </div>
+      <div class="toggle-container">
+        <button id="cudaToggle" class="toggle-btn" data-tooltip="CUDA GPU">
+          <i class="fas fa-microchip"></i>
+        </button>
+        <div class="toggle-alert"></div>
+      </div>
+      <div class="toggle-container">
+        <button
+          id="resetToggle"
+          class="toggle-btn"
+          data-tooltip="Reset Counters"
+        >
+          <i class="fas fa-rotate-left"></i>
+        </button>
+        <div class="toggle-alert"></div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if current_user %}
+    <!-- Authenticated User - Show Main Application -->
+    <div class="container main-content">
+      <div class="row">
+        <div class="col-sm" style="border: 5px">
+          <div>
+            <h2 style="font-weight: 900">PPE Detection</h2>
+          </div>
+          <div id="videoContainer">
+            <img
+              id="videoFeed"
+              src="{% if session.get('video_path') %}{{ url_for('video') }}{% else %}../static/files/Black.png{% endif %}"
+              style="
+                width: auto;
+                height: auto;
+                border-radius: 35px;
+                max-width: 500px;
+                max-height: 500px;
+                object-fit: contain;
+              "
+              onload="onVideoLoad()"
+              onerror="this.onerror=null; this.src='../static/files/Black.png'"
+              alt="Upload video"
+            />
+          </div>
+        </div>
+        <div class="col-sm">
+          <div class="flex-column">
+            <div style="margin-top: 60px">
+              <div
+                class="btn btn-dark"
+                style="width: 100px; border-radius: 15px"
+              >
+                <div
+                  style="font-weight: 900; font-size: x-large; line-height: 1.5"
+                >
+                  <span id="detectCount">0</span>
+                </div>
+                <div style="font-weight: bold">Persons</div>
+              </div>
+              <b style="font-size: 1.2rem; line-height: 1.5">
+                Persons Detected</b
+              >
+            </div>
+            <div style="margin-top: 10px">
+              <div
+                class="btn btn-dark"
+                style="width: 100px; border-radius: 15px"
+              >
+                <div
+                  style="font-weight: 900; font-size: x-large; line-height: 1.5"
+                >
+                  <span id="safecount">0</span>
+                </div>
+                <div style="font-weight: bold">Persons</div>
+              </div>
+              <b style="font-size: 1.2rem; line-height: 1.5"> Safe Persons</b>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-5 align-middle" style="text-align: center">
+        <form
+          method="POST"
+          enctype="multipart/form-data"
+          style="align-content: center; text-align: center; display: flex"
+        >
+          {{form.hidden_tag()}} {{form.file(class_="custom-file-input")}}
+          <div style="margin-top: 6px">
+            <b style="font-size: 1.2rem; line-height: 1.5; margin-top: 8px"
+              >{{form.conf_slide.label}}</b
+            >
+            {{ form.conf_slide(min=0, max=100, oninput="outputUpdate(value)") }}
+          </div>
+          <div style="width: 50px; margin-top: 5px">
+            <output for="conf_slide" id="selected-age"
+              >{{form.conf_slide.data}}</output
+            >
+          </div>
+          <div style="margin-top: -8px">
+            <button
+              type="submit"
+              name="favorite"
+              value="x"
+              class="btnCustom"
+              style="width: 100px"
+            >
+              <a
+                href="https://www.freepnglogos.com/pics/play-button"
+                title="Play Video"
+              >
+                <img
+                  src="https://www.freepnglogos.com/uploads/play-button-png/youtube-style-play-button-clip-art-clkerm-vector-click-art-online-royalty-31.png"
+                  width="55"
+                  style="border-radius: 15px"
+                  alt="Play Video"
+                />
+              </a>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div id="graphSection">
+        <div class="separator"></div>
+        <div id="graphContainer">
+          <h3>Detection Statistics</h3>
+          <canvas id="detectionChart"></canvas>
+        </div>
+      </div>
+
+      <div id="logsSeparator"></div>
+      <div id="logsSection">
+        <h3>Tracking Logs</h3>
+        <div class="export-buttons">
+          <button id="exportJsonBtn" class="export-button">Export JSON</button>
+          <button id="exportExcelBtn" class="export-button">
+            Export Excel
+          </button>
+        </div>
+        <div id="logsHeader">
+          <div class="colHeader colFrame">Frame</div>
+          <div class="colHeader colID">ID</div>
+          <div class="colHeader colX">X</div>
+          <div class="colHeader colY">Y</div>
+          <div class="colHeader colWidth">Width</div>
+          <div class="colHeader colHeight">Height</div>
+          <div class="colHeader colConfidence">Confidence</div>
+          <div class="colHeader colClassName">Class</div>
+          <div class="colHeader colHelmet">Helmet</div>
+          <div class="colHeader colMask">Mask</div>
+          <div class="colHeader colVest">Vest</div>
+          <div class="colHeader colCompliance">Compliance</div>
+        </div>
+        <div id="trackerLogsContent"></div>
+      </div>
+    </div>
+    {% else %}
+    <!-- Unauthenticated User - Show Login/Registration Forms -->
+    <div class="container main-content">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="auth-container" style="
+            background: rgba(17, 24, 39, 0.7);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(55, 65, 81, 0.5);
+            margin-top: 50px;
+          ">
+            <div class="text-center mb-4">
+              <h2 style="color: white; font-weight: 700; margin-bottom: 10px;">Access Required</h2>
+              <p style="color: var(--gray-300); font-size: 1.1rem;">Please login or register to access the Safety Compliance Detection System</p>
+            </div>
+            
+            <!-- Tab Navigation -->
+            <div class="auth-tabs" style="display: flex; margin-bottom: 30px; border-bottom: 1px solid rgba(55, 65, 81, 0.5);">
+              <button class="auth-tab active" data-tab="login" style="
+                flex: 1;
+                padding: 15px;
+                background: none;
+                border: none;
+                color: var(--gray-300);
+                font-size: 1.1rem;
+                font-weight: 500;
+                cursor: pointer;
+                border-bottom: 2px solid transparent;
+                transition: all 0.3s ease;
+              ">Login</button>
+              <button class="auth-tab" data-tab="register" style="
+                flex: 1;
+                padding: 15px;
+                background: none;
+                border: none;
+                color: var(--gray-300);
+                font-size: 1.1rem;
+                font-weight: 500;
+                cursor: pointer;
+                border-bottom: 2px solid transparent;
+                transition: all 0.3s ease;
+              ">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form">
+              <form method="POST" action="{{ url_for('login') }}">
+                <div class="form-group mb-3">
+                  <label for="login_email" style="color: white; font-weight: 500; margin-bottom: 8px; display: block;">Email Address</label>
+                  <input type="email" class="form-control" id="login_email" name="email" required style="
+                    background: rgba(31, 41, 55, 0.8);
+                    border: 1px solid rgba(75, 85, 99, 0.8);
+                    border-radius: 10px;
+                    padding: 12px 15px;
+                    color: white;
+                    font-size: 1rem;
+                  " placeholder="Enter your email">
+                </div>
+                <div class="form-group mb-4">
+                  <label for="login_password" style="color: white; font-weight: 500; margin-bottom: 8px; display: block;">Password</label>
+                  <input type="password" class="form-control" id="login_password" name="password" required style="
+                    background: rgba(31, 41, 55, 0.8);
+                    border: 1px solid rgba(75, 85, 99, 0.8);
+                    border-radius: 10px;
+                    padding: 12px 15px;
+                    color: white;
+                    font-size: 1rem;
+                  " placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn" style="
+                  width: 100%;
+                  padding: 12px;
+                  background: var(--primary-gradient);
+                  border: none;
+                  border-radius: 10px;
+                  color: white;
+                  font-size: 1.1rem;
+                  font-weight: 600;
+                  cursor: pointer;
+                  transition: all 0.3s ease;
+                ">Login</button>
+              </form>
+            </div>
+
+            <!-- Registration Form -->
+            <div id="registerForm" class="auth-form" style="display: none;">
+              <form method="POST" action="{{ url_for('register') }}">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label for="first_name" style="color: white; font-weight: 500; margin-bottom: 8px; display: block;">First Name</label>
+                      <input type="text" class="form-control" id="first_name" name="first_name" required style="
+                        background: rgba(31, 41, 55, 0.8);
+                        border: 1px solid rgba(75, 85, 99, 0.8);
+                        border-radius: 10px;
+                        padding: 12px 15px;
+                        color: white;
+                        font-size: 1rem;
+                      " placeholder="First name">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label for="last_name" style="color: white; font-weight: 500; margin-bottom: 8px; display: block;">Last Name</label>
+                      <input type="text" class="form-control" id="last_name" name="last_name" required style="
+                        background: rgba(31, 41, 55, 0.8);
+                        border: 1px solid rgba(75, 85, 99, 0.8);
+                        border-radius: 10px;
+                        padding: 12px 15px;
+                        color: white;
+                        font-size: 1rem;
+                      " placeholder="Last name">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="email" style="color: white; font-weight: 500; margin-bottom: 8px; display: block;">Email Address</label>
+                  <input type="email" class="form-control" id="email" name="email" required style="
+                    background: rgba(31, 41, 55, 0.8);
+                    border: 1px solid rgba(75, 85, 99, 0.8);
+                    border-radius: 10px;
+                    padding: 12px 15px;
+                    color: white;
+                    font-size: 1rem;
+                  " placeholder="Enter your email">
+                </div>
+                <div class="form-group mb-3">
+                  <label for="username" style="color: white; font-weight: 500; margin-bottom: 8px; display: block;">Username</label>
+                  <input type="text" class="form-control" id="username" name="username" required style="
+                    background: rgba(31, 41, 55, 0.8);
+                    border: 1px solid rgba(75, 85, 99, 0.8);
+                    border-radius: 10px;
+                    padding: 12px 15px;
+                    color: white;
+                    font-size: 1rem;
+                  " placeholder="Choose a username">
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label for="phone" style="color: white; font-weight: 500; margin-bottom: 8px; display: block;">Phone (Optional)</label>
+                      <input type="tel" class="form-control" id="phone" name="phone" style="
+                        background: rgba(31, 41, 55, 0.8);
+                        border: 1px solid rgba(75, 85, 99, 0.8);
+                        border-radius: 10px;
+                        padding: 12px 15px;
+                        color: white;
+                        font-size: 1rem;
+                      " placeholder="Phone number">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group mb-3">
+                      <label for="company" style="color: white; font-weight: 500; margin-bottom: 8px; display: block;">Company (Optional)</label>
+                      <input type="text" class="form-control" id="company" name="company" style="
+                        background: rgba(31, 41, 55, 0.8);
+                        border: 1px solid rgba(75, 85, 99, 0.8);
+                        border-radius: 10px;
+                        padding: 12px 15px;
+                        color: white;
+                        font-size: 1rem;
+                      " placeholder="Company name">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="password" style="color: white; font-weight: 500; margin-bottom: 8px; display: block;">Password</label>
+                  <input type="password" class="form-control" id="password" name="password" required style="
+                    background: rgba(31, 41, 55, 0.8);
+                    border: 1px solid rgba(75, 85, 99, 0.8);
+                    border-radius: 10px;
+                    padding: 12px 15px;
+                    color: white;
+                    font-size: 1rem;
+                  " placeholder="Create a password">
+                </div>
+                <div class="form-group mb-4">
+                  <label for="confirm_password" style="color: white; font-weight: 500; margin-bottom: 8px; display: block;">Confirm Password</label>
+                  <input type="password" class="form-control" id="confirm_password" name="confirm_password" required style="
+                    background: rgba(31, 41, 55, 0.8);
+                    border: 1px solid rgba(75, 85, 99, 0.8);
+                    border-radius: 10px;
+                    padding: 12px 15px;
+                    color: white;
+                    font-size: 1rem;
+                  " placeholder="Confirm your password">
+                </div>
+                <button type="submit" class="btn" style="
+                  width: 100%;
+                  padding: 12px;
+                  background: var(--primary-gradient);
+                  border: none;
+                  border-radius: 10px;
+                  color: white;
+                  font-size: 1.1rem;
+                  font-weight: 600;
+                  cursor: pointer;
+                  transition: all 0.3s ease;
+                ">Register</button>
+              </form>
+            </div>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="flash-messages" style="margin-top: 20px;">
+                  {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} flash-message-{{ 'error' if category == 'error' else 'success' }}">
+                      {{ message }}
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div id="exportAlert"></div>
+
+    <script>
+      function outputUpdate(MyField) {
+        document.querySelector("#selected-age").value = MyField;
+      }
+    </script>
+
+    <script type="text/javascript">
+      setInterval(function update_values() {
+        $.getJSON($SCRIPT_ROOT + "/detectionCount", function (data) {
+          $("#detectCount").text(data.detectCount);
+        });
+      }, 1000);
+    </script>
+    <script type="text/javascript">
+      setInterval(function update_values() {
+        $.getJSON($SCRIPT_ROOT + "/safeCount", function (data) {
+          $("#safecount").text(data.safecount);
+        });
+      }, 1000);
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Theme toggling
+        const themeSwitch = document.getElementById("theme-switch");
+        const body = document.body;
+
+        // Check for saved theme preference or use default
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        const savedMood = localStorage.getItem("mood") || "original";
+
+        // Apply saved theme
+        body.setAttribute("data-theme", savedTheme);
+        body.setAttribute("data-mood", savedMood);
+
+        // Update checkbox state based on theme
+        themeSwitch.checked = savedTheme === "light";
+
+        // Listen for changes on the toggle
+        themeSwitch.addEventListener("change", function () {
+          if (this.checked) {
+            body.setAttribute("data-theme", "light");
+            localStorage.setItem("theme", "light");
+          } else {
+            body.setAttribute("data-theme", "dark");
+            localStorage.setItem("theme", "dark");
+          }
+        });
+
+        // Mood selection functionality
+        const moodOptions = document.querySelectorAll(".mood-option");
+        const themeToggleContainer = document.querySelector(
+          ".theme-toggle-container",
+        );
+
+        // Add toggle functionality for the theme container
+        const themeToggleBtn = document.querySelector(".theme-label");
+        themeToggleBtn.addEventListener("click", function (e) {
+          // Toggle the active class
+          setTimeout(() => {
+            themeToggleContainer.classList.toggle("active");
+          }, 50);
+        });
+
+        // Close the theme toggle when clicking outside of it
+        document.addEventListener("click", function (e) {
+          if (!themeToggleContainer.contains(e.target)) {
+            themeToggleContainer.classList.remove("active");
+          }
+        });
+
+        // Mark the active mood
+        moodOptions.forEach((option) => {
+          if (option.getAttribute("data-mood") === savedMood) {
+            option.classList.add("active");
+          }
+
+          option.addEventListener("click", function () {
+            const mood = this.getAttribute("data-mood");
+
+            // Remove active class from all options
+            moodOptions.forEach((opt) => opt.classList.remove("active"));
+
+            // Add active class to clicked option
+            this.classList.add("active");
+
+            // Set the mood on the body
+            body.setAttribute("data-mood", mood);
+
+            // Save preference
+            localStorage.setItem("mood", mood);
+
+            // Close the theme toggle after selection
+            setTimeout(() => {
+              themeToggleContainer.classList.remove("active");
+            }, 300);
+          });
+        });
+
+        // Add a mood indicator
+        const moodIndicator = document.createElement("div");
+        moodIndicator.className = "mood-indicator";
+        moodIndicator.textContent =
+          "Theme: " + savedMood.charAt(0).toUpperCase() + savedMood.slice(1);
+        document.body.appendChild(moodIndicator);
+
+        // Update indicator when mood changes
+        body.addEventListener("attributeChanged", function (e) {
+          if (e.attributeName === "data-mood") {
+            const currentMood = body.getAttribute("data-mood");
+            moodIndicator.textContent =
+              "Theme: " +
+              currentMood.charAt(0).toUpperCase() +
+              currentMood.slice(1);
+          }
+        });
+
+        // Create cursor trail effect
+        const trailContainer = document.querySelector(
+          ".cursor-trail-container",
+        );
+        const maxTrails = 15;
+        const trails = [];
+
+        // Create trail elements
+        for (let i = 0; i < maxTrails; i++) {
+          const trail = document.createElement("div");
+          trail.className = "cursor-trail";
+          trail.style.opacity = "0";
+          trailContainer.appendChild(trail);
+          trails.push({
+            element: trail,
+            x: 0,
+            y: 0,
+            age: i * -1, // Staggered appearance
+          });
+        }
+
+        // Track mouse movement
+        document.addEventListener("mousemove", function (e) {
+          // Update the position of the oldest trail
+          const oldestTrail = trails.reduce((oldest, trail, index) => {
+            return trail.age > trails[oldest].age ? index : oldest;
+          }, 0);
+
+          trails[oldestTrail].x = e.clientX;
+          trails[oldestTrail].y = e.clientY;
+          trails[oldestTrail].age = 0; // Reset age
+        });
+
+        // Animate trails
+        function animateTrails() {
+          trails.forEach((trail) => {
+            trail.age++;
+
+            if (trail.age > 0 && trail.age < maxTrails) {
+              trail.element.style.opacity = 1 - trail.age / maxTrails;
+              trail.element.style.left = trail.x + "px";
+              trail.element.style.top = trail.y + "px";
+
+              // Scale down as they age
+              const scale = 1 - (trail.age / maxTrails) * 0.5;
+              trail.element.style.transform = `translate(-50%, -50%) scale(${scale})`;
+            } else {
+              trail.element.style.opacity = "0";
+            }
+          });
+
+          requestAnimationFrame(animateTrails);
+        }
+
+        animateTrails();
+      });
+
+      // Add MutationObserver to watch for attribute changes on body
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === "attributes") {
+            const event = new CustomEvent("attributeChanged", {
+              detail: {
+                attributeName: mutation.attributeName,
+                oldValue: mutation.oldValue,
+                newValue: document.body.getAttribute(mutation.attributeName),
+              },
+            });
+            document.body.dispatchEvent(event);
+          }
+        });
+      });
+
+      observer.observe(document.body, { attributes: true });
+
+      // Authentication tab switching functionality
+      const authTabs = document.querySelectorAll('.auth-tab');
+      const authForms = document.querySelectorAll('.auth-form');
+      
+      authTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          const targetTab = this.getAttribute('data-tab');
+          
+          // Remove active class from all tabs
+          authTabs.forEach(t => t.classList.remove('active'));
+          // Add active class to clicked tab
+          this.classList.add('active');
+          
+          // Hide all forms
+          authForms.forEach(form => form.style.display = 'none');
+          // Show target form
+          const targetForm = document.getElementById(targetTab + 'Form');
+          if (targetForm) {
+            targetForm.style.display = 'block';
+          }
+        });
+      });
+    </script>
+
+    <div class="credits">
+      Made with <i class="fas fa-heart heart-icon"></i> by
+      <a href="#">Umair, Javeria & Maryam</a>
+    </div>
+  </body>
+</html>

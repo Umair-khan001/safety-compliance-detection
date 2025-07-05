@@ -1,0 +1,43 @@
+@startuml
+!theme plain
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam activityBorderColor #2C3E50
+skinparam activityStartColor #27AE60
+skinparam activityEndColor #E74C3C
+skinparam activityArrowColor #34495E
+
+title User Sign-Up Workflow
+
+start
+:Access Registration Page;
+:Fill registration form;
+:Submit registration;
+:Validate form data;
+
+if (Valid input?) then (no)
+  :Show validation errors;
+  stop
+else (yes)
+  :Check existing users;
+  
+  if (User already exists?) then (yes)
+    :Show "User exists" error;
+    stop
+  else (no)
+    :Create new user account;
+    :Set status to 'pending';
+    :Log registration activity;
+    :Show success message;
+    :Redirect to login page;
+    
+    note right
+      Account awaits
+      admin approval
+    end note
+    
+    stop
+  endif
+endif
+
+@enduml

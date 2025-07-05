@@ -1,0 +1,94 @@
+@startuml Figure_4_5_Detection_Pipeline_Flow
+!define RECTANGLE class
+
+skinparam backgroundColor white
+skinparam componentStyle rectangle
+skinparam rectangle {
+    BorderColor black
+    FontSize 10
+}
+skinparam packageStyle rectangle
+
+title Figure 4.5: Detection Pipeline Flow from Input to Visualization
+
+package "Input Layer" {
+    rectangle "Video Input\n(MP4/AVI)" as video_input
+    rectangle "Webcam Stream\n(Real-time)" as webcam_input
+    rectangle "Image Frames\nExtraction" as frame_extraction
+}
+
+package "Preprocessing" {
+    rectangle "Frame Resize\n640x640" as resize
+    rectangle "Format Conversion\nRGB/BGR" as format_convert
+    rectangle "Batch Processing\nFrame Buffering" as batch_process
+}
+
+package "YOLO Detection Engine" {
+    rectangle "YOLOv8 Model\n(best.pt)" as yolo_model
+    rectangle "Object Detection\nBounding Boxes" as detection
+    rectangle "Confidence Filtering\n(threshold > 0.5)" as confidence_filter
+    rectangle "Class Prediction\n7 PPE Classes" as class_prediction
+}
+
+package "Object Tracking" {
+    rectangle "EuclideanDistTracker\n(tracker.py)" as tracker
+    rectangle "ID Assignment\nUnique Object IDs" as id_assignment
+    rectangle "Motion Tracking\nFrame-to-Frame" as motion_tracking
+}
+
+package "Compliance Evaluation" {
+    rectangle "PPE Detection Rules\nSafety Compliance" as compliance_rules
+    rectangle "Violation Detection\nMissing PPE" as violation_detection
+    rectangle "Alert Generation\nSafety Warnings" as alerts
+}
+
+package "Visualization & Output" {
+    rectangle "Bounding Box Overlay\nDetection Boxes" as bbox_overlay
+    rectangle "Label Annotation\nClass Names + IDs" as label_annotation
+    rectangle "Compliance Status\nColor Coding" as status_overlay
+    rectangle "Output Video\nProcessed Result" as output_video
+}
+
+package "Results Storage" {
+    rectangle "Detection Statistics\nCount & Classification" as statistics
+    rectangle "Database Storage\nResults Logging" as db_storage
+    rectangle "Performance Metrics\nFPS & Accuracy" as metrics
+}
+
+' Input flow
+video_input --> frame_extraction : Extract Frames
+webcam_input --> frame_extraction : Live Capture
+frame_extraction --> resize : Prepare for Processing
+
+' Preprocessing flow
+resize --> format_convert : Standardize Input
+format_convert --> batch_process : Optimize Processing
+
+' Detection flow
+batch_process --> yolo_model : Feed to Model
+yolo_model --> detection : Generate Detections
+detection --> confidence_filter : Filter Low Confidence
+confidence_filter --> class_prediction : Classify PPE Items
+
+' Tracking flow
+class_prediction --> tracker : Track Objects
+tracker --> id_assignment : Assign Unique IDs
+id_assignment --> motion_tracking : Track Movement
+
+' Compliance evaluation
+motion_tracking --> compliance_rules : Evaluate Compliance
+compliance_rules --> violation_detection : Check Violations
+violation_detection --> alerts : Generate Alerts
+
+' Visualization pipeline
+alerts --> bbox_overlay : Draw Bounding Boxes
+bbox_overlay --> label_annotation : Add Labels
+label_annotation --> status_overlay : Add Status Colors
+status_overlay --> output_video : Final Output
+
+' Results and storage
+output_video --> statistics : Generate Stats
+statistics --> db_storage : Store Results
+statistics --> metrics : Calculate Performance
+
+@enduml

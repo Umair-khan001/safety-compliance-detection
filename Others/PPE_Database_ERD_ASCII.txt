@@ -1,0 +1,105 @@
+
+╔═══════════════════════════════════════════════════════════════════════════════════════════╗
+║                           🛡️ PPE DETECTION SYSTEM - DATABASE ERD                          ║
+╚═══════════════════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────┐
+│             👥 USERS                │
+├─────────────────────────────────────┤
+│ 🔑 id                   SERIAL (PK) │
+│ 📧 email                VARCHAR(UK) │
+│ 👤 username             VARCHAR(UK) │
+│ 🔒 password_hash        VARCHAR     │
+│ 👨 first_name           VARCHAR     │
+│ 👩 last_name            VARCHAR     │
+│ 🎭 role                 VARCHAR     │
+│ 📊 status               VARCHAR     │
+│ 📅 registration_date    TIMESTAMP   │
+│ ✅ approved_date        TIMESTAMP   │
+│ 👨‍💼 approved_by          INT (FK)    │
+│ 🕐 last_login           TIMESTAMP   │
+│ 📞 phone                VARCHAR     │
+│ 🏢 company              VARCHAR     │
+│ 📅 created_at           TIMESTAMP   │
+│ 📅 updated_at           TIMESTAMP   │
+└─────────────────────────────────────┘
+                    │
+                    │ ╭──────────────╮
+                    └─│ SELF-REF 1:N │ (approved_by)
+                      ╰──────────────╯
+                    │
+        ┌───────────┴───────────┐
+        │ 1:N                   │ 1:N
+        ▼                       ▼
+┌─────────────────────┐   ┌─────────────────────────┐
+│  📝 USER_ACTIVITY   │   │    🎥 DETECTION         │
+│      LOGS           │   │       SESSIONS          │
+├─────────────────────┤   ├─────────────────────────┤
+│ 🔑 id       SERIAL  │   │ 🔑 id               SERIAL │
+│ 👤 user_id  INT(FK) │   │ 👤 user_id          INT(FK)│
+│ 🎯 activity_type    │   │ 🎭 session_type     VARCHAR│
+│ 📝 description      │   │ 🎥 video_filename   VARCHAR│
+│ 🎥 video_filename   │   │ 🎯 confidence_thresh DECIMAL│
+│ 🔍 detection_results│   │ 📊 total_detections  INTEGER│
+│ 🌐 ip_address       │   │ ✅ safe_detections   INTEGER│
+│ 🖥️ user_agent       │   │ ❌ unsafe_detections INTEGER│
+│ 📅 created_at       │   │ ⏱️ session_duration  INTEGER│
+└─────────────────────┘   │ 📊 status            VARCHAR│
+                          │ 🕐 started_at        TIMESTAMP│
+                          │ 🏁 completed_at      TIMESTAMP│
+                          └─────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════════════════════════╗
+║                                    RELATIONSHIP DETAILS                                   ║
+╠═══════════════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                           ║
+║  🔗 USERS ↔ USERS (Self-Reference)                                                       ║
+║     • Type: One-to-Many (1:N)                                                            ║
+║     • Field: approved_by → users.id                                                      ║
+║     • Purpose: Admin users approve customer registrations                                ║
+║                                                                                           ║
+║  🔗 USERS ↔ USER_ACTIVITY_LOGS                                                           ║
+║     • Type: One-to-Many (1:N)                                                            ║
+║     • Field: user_id → users.id                                                          ║
+║     • Purpose: Track all user actions and system events                                  ║
+║     • Cascade: DELETE CASCADE                                                            ║
+║                                                                                           ║
+║  🔗 USERS ↔ DETECTION_SESSIONS                                                           ║
+║     • Type: One-to-Many (1:N)                                                            ║
+║     • Field: user_id → users.id                                                          ║
+║     • Purpose: Track PPE detection sessions (webcam/upload)                              ║
+║     • Cascade: DELETE CASCADE                                                            ║
+║                                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════════════════════════════════════╗
+║                                  BUSINESS RULES & CONSTRAINTS                            ║
+╚═══════════════════════════════════════════════════════════════════════════════════════════╝
+
+📋 CHECK CONSTRAINTS:
+   • users.role IN ('admin', 'customer')
+   • users.status IN ('pending', 'approved', 'rejected', 'suspended')
+   • detection_sessions.session_type IN ('webcam', 'video_upload')
+   • detection_sessions.status IN ('active', 'completed', 'failed')
+
+🚀 PERFORMANCE INDEXES:
+   • idx_users_email ON users(email)
+   • idx_users_status ON users(status)
+   • idx_activity_user_id ON user_activity_logs(user_id)
+   • idx_detection_user_id ON detection_sessions(user_id)
+
+🛡️ SECURITY FEATURES:
+   • Password hashing with bcrypt
+   • Role-based access control (RBAC)
+   • Complete audit trail logging
+   • Referential integrity protection
+
+📈 SCALABILITY:
+   • JSON storage for flexible detection results
+   • Optimized queries with strategic indexes
+   • Cascade deletes for data cleanup
+   • Timestamp tracking on all entities
+
+══════════════════════════════════════════════════════════════════════════════════════════════
+Database: PostgreSQL | Host: Neon.tech | Tables: 3 | Relationships: 3 | Indexes: 4
+══════════════════════════════════════════════════════════════════════════════════════════════

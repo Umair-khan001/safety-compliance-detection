@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 7
+names: ['boots', 'face_shield', 'gloves', 'goggles', 'helmet', 'mask', 'vest']
+
+roboflow:
+  workspace: compliance-detection
+  project: safety-compliance-detection-yxb60
+  version: 5
+  license: Public Domain
+  url: https://universe.roboflow.com/compliance-detection/safety-compliance-detection-yxb60/dataset/5

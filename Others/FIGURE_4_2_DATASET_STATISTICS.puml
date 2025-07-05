@@ -1,0 +1,76 @@
+@startuml Figure_4_2_Dataset_Statistics_Class_Distribution
+!define RECTANGLE class
+
+skinparam backgroundColor white
+skinparam componentStyle rectangle
+skinparam rectangle {
+    BackgroundColor lightblue
+    BorderColor black
+    FontSize 10
+}
+
+title Figure 4.2: Dataset Statistics and Class Distribution
+
+package "Dataset Overview" {
+    rectangle "Total Classes: 7" as totalclasses #lightgreen
+    rectangle "PPE Items Detection" as ppeitems #lightgreen
+    rectangle "Source: Roboflow Universe" as source #lightcyan
+}
+
+package "Dataset Splits" {
+    rectangle "Training Set\n9,867 annotations" as train #lightblue
+    rectangle "Validation Set\n3,074 annotations" as valid #lightyellow  
+    rectangle "Test Set\n1,400 annotations" as test #lightcoral
+}
+
+package "Class Distribution - Training Set" {
+    rectangle "boots (0): 1,987\n20.1%" as train_boots #FFE6E6
+    rectangle "face_shield (1): 111\n1.1%" as train_face #E6F3FF
+    rectangle "gloves (2): 2,144\n21.7%" as train_gloves #E6FFE6
+    rectangle "goggles (3): 547\n5.5%" as train_goggles #FFFEE6
+    rectangle "helmet (4): 2,231\n22.6%" as train_helmet #F0E6FF
+    rectangle "mask (5): 1,050\n10.6%" as train_mask #FFE6F3
+    rectangle "vest (6): 1,797\n18.2%" as train_vest #E6FFF0
+}
+
+package "Class Distribution - Validation Set" {
+    rectangle "boots (0): 596\n19.4%" as valid_boots #FFE6E6
+    rectangle "face_shield (1): 25\n0.8%" as valid_face #E6F3FF
+    rectangle "gloves (2): 645\n21.0%" as valid_gloves #E6FFE6
+    rectangle "goggles (3): 149\n4.8%" as valid_goggles #FFFEE6
+    rectangle "helmet (4): 765\n24.9%" as valid_helmet #F0E6FF
+    rectangle "mask (5): 314\n10.2%" as valid_mask #FFE6F3
+    rectangle "vest (6): 580\n18.9%" as valid_vest #E6FFF0
+}
+
+package "Class Distribution - Test Set" {
+    rectangle "boots (0): 269\n19.2%" as test_boots #FFE6E6
+    rectangle "face_shield (1): 14\n1.0%" as test_face #E6F3FF
+    rectangle "gloves (2): 309\n22.1%" as test_gloves #E6FFE6
+    rectangle "goggles (3): 88\n6.3%" as test_goggles #FFFEE6
+    rectangle "helmet (4): 300\n21.4%" as test_helmet #F0E6FF
+    rectangle "mask (5): 162\n11.6%" as test_mask #FFE6F3
+    rectangle "vest (6): 258\n18.4%" as test_vest #E6FFF0
+}
+
+package "Key Statistics" {
+    rectangle "Total Annotations: 14,341" as total #lightgreen
+    rectangle "Most Common: helmet (22.6%)" as most #lightgreen
+    rectangle "Least Common: face_shield (1.0%)" as least #lightcoral
+    rectangle "Class Imbalance: 22:1 ratio" as imbalance #lightyellow
+}
+
+package "Dataset Quality Metrics" {
+    rectangle "Annotation Density: High" as density #lightcyan
+    rectangle "Image Resolution: Variable" as resolution #lightcyan
+    rectangle "Training Data: 68.8%" as trainpct #lightblue
+    rectangle "Validation Data: 21.4%" as validpct #lightyellow
+    rectangle "Test Data: 9.8%" as testpct #lightcoral
+}
+
+' Relationships showing data flow
+totalclasses --> train
+totalclasses --> valid
+totalclasses --> test
+
+@enduml

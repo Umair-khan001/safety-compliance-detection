@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Safety Compliance Detection System</title>
+    <link rel="icon" type="image/svg+xml" href="static/files/favicon.svg" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+
+        /* CSS Variables matching main app */
+        :root {
+            --blue-400: #60a5fa;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
+            --purple-400: #c084fc;
+            --purple-500: #a855f7;
+            --purple-600: #9333ea;
+            --gray-800: #1f2937;
+            --gray-700: #374151;
+            --gray-600: #4b5563;
+            --gray-500: #6b7280;
+            --gray-400: #9ca3af;
+            --gray-300: #d1d5db;
+            --gray-200: #e5e7eb;
+            --gray-100: #f3f4f6;
+            --red-500: #ef4444;
+            --green-500: #22c55e;
+            --yellow-500: #eab308;
+        }
+
+        /* Global Styles matching main app */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #0a0f1d 0%, #161c2d 50%, #0f172a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }        /* Header styling matching main app */
+        .custom-header {
+            background: linear-gradient(135deg, #0a0f1d 0%, #161c2d 100%);
+            color: #ffffff;
+            padding: 6px 30px;
+            font-family: "Poppins", sans-serif;
+            display: flex;
+            align-items: center;
+            min-height: 50px;
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }/* Header logo SVG styling */
+        .header-logo {
+            width: 32px;
+            height: 32px;
+            margin-right: 12px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.3));
+            animation: logoEntrance 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .header-logo:hover {
+            transform: scale(1.2) rotate(8deg);
+            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.8)) 
+                    drop-shadow(0 0 35px rgba(168, 85, 247, 0.6))
+                    drop-shadow(0 0 50px rgba(16, 185, 129, 0.4));
+        }
+
+        /* Enhanced SVG element animations */
+        .header-logo:hover .shield-path {
+            animation: shieldPulse 2s ease-in-out infinite;
+        }
+
+        .header-logo:hover .check-path {
+            stroke-width: 3;
+            animation: checkGlow 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.9));
+        }
+
+        .header-logo:hover .detail-circle {
+            animation: circleFloat 2.5s ease-in-out infinite;
+        }
+
+        /* Enhanced keyframe animations */
+        @keyframes shieldPulse {
+            0%, 100% { 
+                transform: scale(1);
+                filter: brightness(1);
+            }
+            50% { 
+                transform: scale(1.02);
+                filter: brightness(1.2);
+            }
+        }
+
+        @keyframes checkGlow {
+            0%, 100% { 
+                stroke-width: 3;
+                opacity: 1;
+            }
+            50% { 
+                stroke-width: 3.5;
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes circleFloat {
+            0%, 100% { 
+                transform: translateY(0px) scale(1);
+                opacity: 0.8;
+            }
+            33% { 
+                transform: translateY(-1px) scale(1.1);
+                opacity: 1;
+            }
+            66% { 
+                transform: translateY(1px) scale(0.95);
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes logoEntrance {
+            0% {
+                transform: scale(0.7) rotate(-15deg);
+                opacity: 0.5;
+                filter: drop-shadow(0 0 0px rgba(59, 130, 246, 0));
+            }
+            50% {
+                transform: scale(1.05) rotate(3deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+                filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.3));
+            }
+        }
+
+        /* Gradient animations on hover */
+        .header-logo:hover #headerShieldGradient stop:first-child {
+            animation: gradientShift1 2s ease-in-out infinite;
+        }
+
+        .header-logo:hover #headerShieldGradient stop:last-child {
+            animation: gradientShift2 2s ease-in-out infinite;
+        }
+
+        .header-logo:hover #headerCheckGradient stop:first-child {
+            animation: checkGradientShift 1.5s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift1 {
+            0%, 100% { stop-color: #3B82F6; }
+            50% { stop-color: #60A5FA; }
+        }
+
+        @keyframes gradientShift2 {
+            0%, 100% { stop-color: #A855F7; }
+            50% { stop-color: #C084FC; }
+        }
+
+        @keyframes checkGradientShift {
+            0%, 100% { stop-color: #10B981; }
+            50% { stop-color: #34D399; }
+        }
+
+        /* Enhanced click effect */
+        .header-logo:active {
+            transform: scale(1.1) rotate(5deg);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 0 25px rgba(59, 130, 246, 1)) 
+                    drop-shadow(0 0 40px rgba(168, 85, 247, 0.8));
+        }
+
+        /* Micro-interactions for SVG paths */
+        .shield-path {
+            transition: all 0.3s ease;
+        }
+
+        .check-path {
+            transition: all 0.3s ease;
+            stroke-dasharray: 20;
+            stroke-dashoffset: 0;
+        }
+
+        .header-logo:hover .check-path {
+            animation: checkDraw 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes checkDraw {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -5; }
+        }        .detail-circle {
+            transition: all 0.3s ease;
+        }
+
+        /* Particle effects container */
+        .logo-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 32px;
+            height: 32px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .header-logo:hover + .logo-particles,
+        .logo-container:hover .logo-particles {
+            opacity: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: radial-gradient(circle, #60A5FA, transparent);
+            border-radius: 50%;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) {
+            top: 10%;
+            left: 20%;
+            animation-delay: 0s;
+            animation-duration: 2.5s;
+        }
+
+        .particle:nth-child(2) {
+            top: 30%;
+            right: 15%;
+            animation-delay: 0.5s;
+            animation-duration: 3s;
+        }
+
+        .particle:nth-child(3) {
+            bottom: 20%;
+            left: 30%;
+            animation-delay: 1s;
+            animation-duration: 2.8s;
+        }
+
+        .particle:nth-child(4) {
+            bottom: 30%;
+            right: 25%;
+            animation-delay: 1.5s;
+            animation-duration: 3.2s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) scale(0.8);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-8px) scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        /* Enhanced header text animation */
+        .header-text h1 {
+            font-size: 20px !important;
+            font-weight: 600;
+            margin: 0;
+            background: linear-gradient(to right, var(--blue-400), var(--purple-500));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .header-logo:hover ~ .header-text h1 {
+            background: linear-gradient(45deg, #60A5FA, #A855F7, #10B981, #60A5FA);
+            background-size: 300% 300%;
+            animation: gradientFlow 2s ease infinite;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .header-text h1 {
+            font-size: 20px !important;
+            font-weight: 600;
+            margin: 0;
+            background: linear-gradient(to right, var(--blue-400), var(--purple-500));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .header-text p {
+            font-size: 12px !important;
+            font-weight: 300;
+            color: var(--gray-300);
+            margin: 2px 0 0 0;
+        }
+
+        /* Profile specific styles */
+        .profile-header {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-card {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(55, 65, 81, 0.5);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-card .card-header {
+            background: rgba(55, 65, 81, 0.3);
+            border-bottom: 1px solid rgba(75, 85, 99, 0.5);
+            border-radius: 15px 15px 0 0 !important;
+            padding: 1.25rem;
+        }
+
+        .profile-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-header h5 {
+            color: var(--blue-400);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .stats-card {
+            background: linear-gradient(45deg, rgba(34, 197, 94, 0.2), rgba(32, 201, 151, 0.2));
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Form controls matching main app */
+        .form-control, .form-select {
+            background: rgba(31, 41, 55, 0.8);
+            border: 1px solid rgba(75, 85, 99, 0.5);
+            border-radius: 10px;
+            color: #ffffff;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(31, 41, 55, 0.9);
+            border-color: var(--blue-500);
+            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+            color: #ffffff;
+        }
+
+        .form-control::placeholder {
+            color: rgba(156, 163, 175, 0.7);
+        }
+
+        .form-label {
+            color: var(--gray-300);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Buttons matching main app */
+        .btn-custom {
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 500;
+            font-family: "Poppins", sans-serif;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary.btn-custom {
+            background: linear-gradient(45deg, var(--blue-500), var(--blue-600));
+            color: white;
+        }
+
+        .btn-primary.btn-custom:hover {
+            background: linear-gradient(45deg, var(--blue-600), var(--blue-700));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-warning.btn-custom {
+            background: linear-gradient(45deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .btn-warning.btn-custom:hover {
+            background: linear-gradient(45deg, #d97706, #b45309);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Navigation buttons */
+        .nav-btn {
+            background: rgba(55, 65, 81, 0.5);
+            color: var(--gray-300);
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(75, 85, 99, 0.3);
+        }
+
+        .nav-btn:hover {
+            background: rgba(75, 85, 99, 0.7);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Alert styling */
+        .alert {
+            border-radius: 10px;
+            border: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }        /* Table styling */
+        .table {
+            color: #ffffff;
+            background: transparent;
+        }
+
+        .table thead th {
+            background: rgba(55, 65, 81, 0.6);
+            color: var(--blue-400);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+            font-weight: 600;
+            padding: 1rem 0.75rem;
+        }
+
+        .table tbody td {
+            background: rgba(31, 41, 55, 0.3);
+            border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+            padding: 0.875rem 0.75rem;
+            color: var(--gray-200);
+        }
+
+        .table-hover tbody tr:hover td {
+            background: rgba(59, 130, 246, 0.2);
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .table-light {
+            background: rgba(55, 65, 81, 0.4);
+            color: var(--blue-400);
+        }
+
+        .table-light th {
+            background: rgba(55, 65, 81, 0.6);
+            color: var(--blue-400);
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+
+        /* Badge styling */
+        .badge {
+            font-size: 0.8em;
+            padding: 0.4em 0.8em;
+        }
+
+        .badge.bg-success {
+            background: rgba(34, 197, 94, 0.8) !important;
+        }
+
+        .badge.bg-primary {
+            background: rgba(59, 130, 246, 0.8) !important;
+        }
+
+        .badge.bg-warning {
+            background: rgba(245, 158, 11, 0.8) !important;
+        }
+
+        .badge.bg-danger {
+            background: rgba(239, 68, 68, 0.8) !important;
+        }
+
+        /* Loading spinner */
+        .spinner-border {
+            color: var(--blue-500);
+        }
+
+        /* Small text styling */
+        .text-muted {
+            color: var(--gray-400) !important;
+        }
+
+        .text-success {
+            color: #4ade80 !important;
+        }
+
+        /* Container styling */
+        .container {
+            max-width: 1200px;
+        }
+
+        /* User avatar styling */
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--blue-400), var(--purple-500));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin-right: 1.5rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .profile-header {
+                text-align: center;
+            }
+            
+            .user-avatar {
+                margin: 0 auto 1rem auto;
+            }
+            
+            .custom-header {
+                padding: 10px 15px;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-dark">    <!-- Header matching main app -->    <header class="custom-header">        <div class="logo-container">
+            <svg class="header-logo" viewBox="0 0 32 32" width="32" height="32">
+                <defs>
+                    <linearGradient id="headerShieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#A855F7;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="headerCheckGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                
+                <path d="M16 2 L6 6 L6 16 Q6 24 16 30 Q26 24 26 16 L26 6 Z" 
+                      fill="url(#headerShieldGradient)" 
+                      stroke="#1E293B" 
+                      stroke-width="0.5"
+                      class="shield-path"/>
+                
+                <path d="M10 16 L14 20 L22 12" 
+                      stroke="url(#headerCheckGradient)" 
+                      stroke-width="2.5" 
+                      stroke-linecap="round" 
+                      stroke-linejoin="round" 
+                      fill="none"
+                      class="check-path"/>
+                
+                <circle cx="11" cy="10" r="1" fill="#FFFFFF" opacity="0.8" class="detail-circle"/>
+                <circle cx="21" cy="10" r="1" fill="#FFFFFF" opacity="0.8" class="detail-circle"/>
+                <circle cx="16" cy="8" r="1" fill="#FFFFFF" opacity="0.8" class="detail-circle"/>
+            </svg>
+            <div class="logo-particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+        </div>
+        <div class="header-text">
+            <h1>Safety Compliance Detection System</h1>
+            <p>User Profile Management</p>
+        </div>
+        
+        <!-- Navigation buttons -->
+        <div style="margin-left: auto; display: flex; align-items: center; gap: 15px;">
+            <a href="{{ url_for('front') }}" class="nav-btn">
+                <i class="fas fa-arrow-left me-1"></i>Back to App
+            </a>
+            <a href="{{ url_for('logout') }}" class="nav-btn">
+                <i class="fas fa-sign-out-alt me-1"></i>Logout
+            </a>
+        </div>
+    </header>
+
+    <!-- Profile Header -->
+    <div class="container" style="margin-top: 100px;">
+        <div class="profile-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <h2 class="mb-1" style="color: var(--blue-400); font-weight: 600;">{{ user.first_name }} {{ user.last_name }}</h2>
+                            <p class="mb-1" style="color: var(--gray-300); opacity: 0.9;">{{ user.email }}</p>
+                            <small style="color: var(--gray-400);">
+                                <i class="fas fa-calendar me-1"></i>
+                                Member since {{ user.registration_date.strftime('%B %Y') if user.registration_date }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <span class="badge bg-success fs-6 px-3 py-2">
+                        <i class="fas fa-check-circle me-1"></i>Active User
+                    </span>
+                </div>
+            </div>
+        </div>        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' if category == 'warning' else 'info-circle' if category == 'info' else 'times-circle' }} me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" style="filter: invert(1);"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="row">
+            <!-- Profile Information -->
+            <div class="col-md-6">
+                <div class="card profile-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user me-2"></i>Profile Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ url_for('update_profile') }}">
+                            {{ profile_form.hidden_tag() }}
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ profile_form.first_name.label(class="form-label") }}
+                                    {{ profile_form.first_name(class="form-control") }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {{ profile_form.last_name.label(class="form-label") }}
+                                    {{ profile_form.last_name(class="form-control") }}
+                                </div>
+                            </div>
+                              <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" value="{{ user.email }}" readonly>
+                                <small class="text-muted">
+                                    <i class="fas fa-lock me-1"></i>Email cannot be changed
+                                </small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-control" value="{{ user.username }}" readonly>
+                                <small class="text-muted">
+                                    <i class="fas fa-lock me-1"></i>Username cannot be changed
+                                </small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ profile_form.phone.label(class="form-label") }}
+                                {{ profile_form.phone(class="form-control") }}
+                            </div>
+                            
+                            <div class="mb-4">
+                                {{ profile_form.company.label(class="form-label") }}
+                                {{ profile_form.company(class="form-control") }}
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-custom w-100">
+                                <i class="fas fa-save me-2"></i>Update Profile
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Change Password -->
+            <div class="col-md-6">
+                <div class="card profile-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-lock me-2"></i>Change Password
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ url_for('change_password') }}">
+                            {{ password_form.hidden_tag() }}
+                            
+                            <div class="mb-3">
+                                {{ password_form.current_password.label(class="form-label") }}
+                                {{ password_form.current_password(class="form-control") }}
+                            </div>
+                              <div class="mb-3">
+                                {{ password_form.new_password.label(class="form-label") }}
+                                {{ password_form.new_password(class="form-control") }}
+                                <small class="text-muted">
+                                    <i class="fas fa-shield-alt me-1"></i>Minimum 8 characters
+                                </small>
+                            </div>
+                            
+                            <div class="mb-4">
+                                {{ password_form.confirm_password.label(class="form-label") }}
+                                {{ password_form.confirm_password(class="form-control") }}
+                            </div>
+                            
+                            <button type="submit" class="btn btn-warning btn-custom w-100">
+                                <i class="fas fa-key me-2"></i>Change Password
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Account Info -->
+                <div class="card profile-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Account Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6 mb-3">
+                                <div class="stats-card">
+                                    <h4 class="mb-1" id="total-sessions">-</h4>
+                                    <small>Total Sessions</small>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="stats-card">
+                                    <h4 class="mb-1" id="total-detections">-</h4>
+                                    <small>Total Detections</small>
+                                </div>
+                            </div>
+                        </div>
+                          <div class="mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                Last login: {{ user.last_login.strftime('%B %d, %Y at %I:%M %p') if user.last_login else 'Never' }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Sessions -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card profile-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-history me-2"></i>Recent Detection Sessions
+                        </h5>
+                        <button class="btn btn-sm btn-outline-primary" onclick="loadSessions()">
+                            <i class="fas fa-refresh me-1"></i>Refresh
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="sessions-loading" class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2 mb-0">Loading your sessions...</p>
+                        </div>
+                        <div id="sessions-content" style="display: none;">                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th><i class="fas fa-tag me-2"></i>Type</th>
+                                            <th><i class="fas fa-file-video me-2"></i>Video File</th>
+                                            <th><i class="fas fa-search me-2"></i>Detections</th>
+                                            <th><i class="fas fa-clock me-2"></i>Duration</th>
+                                            <th><i class="fas fa-info-circle me-2"></i>Status</th>
+                                            <th><i class="fas fa-calendar me-2"></i>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sessions-table-body">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>                        <div id="sessions-empty" style="display: none;">
+                            <div class="text-center py-4">
+                                <i class="fas fa-video fa-3x text-muted mb-3" style="color: var(--gray-500) !important;"></i>
+                                <h6 class="text-muted">No detection sessions yet</h6>
+                                <p class="text-muted">Start by uploading a video or using webcam detection.</p>
+                                <a href="{{ url_for('front') }}" class="btn btn-primary btn-custom">
+                                    <i class="fas fa-play me-2"></i>Start Detection
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Load user sessions
+        function loadSessions() {
+            document.getElementById('sessions-loading').style.display = 'block';
+            document.getElementById('sessions-content').style.display = 'none';
+            document.getElementById('sessions-empty').style.display = 'none';
+            
+            fetch('/api/profile/sessions')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('sessions-loading').style.display = 'none';
+                    
+                    if (data.sessions && data.sessions.length > 0) {
+                        displaySessions(data.sessions);
+                        document.getElementById('sessions-content').style.display = 'block';
+                        
+                        // Update stats
+                        const totalSessions = data.sessions.length;
+                        const totalDetections = data.sessions.reduce((sum, session) => sum + (session.total_detections || 0), 0);
+                        document.getElementById('total-sessions').textContent = totalSessions;
+                        document.getElementById('total-detections').textContent = totalDetections;
+                    } else {
+                        document.getElementById('sessions-empty').style.display = 'block';
+                        document.getElementById('total-sessions').textContent = '0';
+                        document.getElementById('total-detections').textContent = '0';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading sessions:', error);
+                    document.getElementById('sessions-loading').style.display = 'none';
+                    document.getElementById('sessions-empty').style.display = 'block';
+                });
+        }
+        
+        function displaySessions(sessions) {
+            const tbody = document.getElementById('sessions-table-body');
+            tbody.innerHTML = '';
+            
+            sessions.forEach(session => {
+                const row = document.createElement('tr');
+                
+                const typeIcon = session.session_type === 'webcam' ? 'fas fa-camera' : 'fas fa-video';
+                const statusClass = session.status === 'completed' ? 'success' : 
+                                  session.status === 'failed' ? 'danger' : 'warning';
+                
+                const duration = session.session_duration ? 
+                    `${Math.floor(session.session_duration / 60)}:${(session.session_duration % 60).toString().padStart(2, '0')}` : 
+                    '-';
+                
+                const startDate = new Date(session.started_at).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                row.innerHTML = `
+                    <td>
+                        <i class="${typeIcon} me-2"></i>
+                        ${session.session_type === 'webcam' ? 'Webcam' : 'Video Upload'}
+                    </td>
+                    <td>${session.video_filename || 'Live Feed'}</td>
+                    <td>
+                        <span class="badge bg-primary">${session.total_detections || 0}</span>
+                        <small class="text-success ms-1">${session.safe_detections || 0} safe</small>
+                    </td>
+                    <td>${duration}</td>
+                    <td><span class="badge bg-${statusClass}">${session.status}</span></td>
+                    <td>${startDate}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+          // Load sessions on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSessions();
+        });
+
+        // Enhanced logo interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            const logo = document.querySelector('.header-logo');
+            const logoContainer = document.querySelector('.logo-container');
+            const headerText = document.querySelector('.header-text h1');
+            
+            // Create dynamic sparkle effects
+            function createSparkle(x, y) {
+                const sparkle = document.createElement('div');
+                sparkle.style.position = 'absolute';
+                sparkle.style.left = x + 'px';
+                sparkle.style.top = y + 'px';
+                sparkle.style.width = '4px';
+                sparkle.style.height = '4px';
+                sparkle.style.background = 'radial-gradient(circle, #60A5FA, transparent)';
+                sparkle.style.borderRadius = '50%';
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.animation = 'sparkle 1s ease-out forwards';
+                sparkle.style.zIndex = '1000';
+                
+                logoContainer.appendChild(sparkle);
+                
+                setTimeout(() => {
+                    if (sparkle.parentNode) {
+                        sparkle.parentNode.removeChild(sparkle);
+                    }
+                }, 1000);
+            }
+            
+            // Add sparkle keyframes dynamically
+            const sparkleStyle = document.createElement('style');
+            sparkleStyle.textContent = `
+                @keyframes sparkle {
+                    0% {
+                        transform: scale(0) rotate(0deg);
+                        opacity: 1;
+                    }
+                    50% {
+                        transform: scale(1.5) rotate(180deg);
+                        opacity: 0.8;
+                    }
+                    100% {
+                        transform: scale(0) rotate(360deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(sparkleStyle);
+            
+            // Logo click interaction
+            logo.addEventListener('click', function(e) {
+                // Create multiple sparkles
+                for (let i = 0; i < 6; i++) {
+                    setTimeout(() => {
+                        const rect = logoContainer.getBoundingClientRect();
+                        const x = Math.random() * rect.width;
+                        const y = Math.random() * rect.height;
+                        createSparkle(x, y);
+                    }, i * 100);
+                }
+                
+                // Trigger a special animation on the header text
+                headerText.style.animation = 'none';
+                headerText.offsetHeight; // Trigger reflow
+                headerText.style.animation = 'gradientFlow 1s ease';
+            });
+            
+            // Continuous subtle background animation
+            let animationFrame;
+            function animateBackground() {
+                const time = Date.now() * 0.001;
+                const intensity = 0.5 + Math.sin(time) * 0.2;
+                
+                logo.style.filter = `
+                    drop-shadow(0 0 ${8 + intensity * 4}px rgba(59, 130, 246, ${0.3 + intensity * 0.2}))
+                    drop-shadow(0 0 ${15 + intensity * 8}px rgba(168, 85, 247, ${0.2 + intensity * 0.15}))
+                `;
+                
+                animationFrame = requestAnimationFrame(animateBackground);
+            }
+            
+            // Start background animation
+            animateBackground();
+            
+            // Pause animation when tab is not visible
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    cancelAnimationFrame(animationFrame);
+                } else {
+                    animateBackground();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

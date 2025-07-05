@@ -1,0 +1,105 @@
+@startuml Figure_4_4_Flask_Application_Architecture
+!define RECTANGLE class
+
+skinparam backgroundColor white
+skinparam componentStyle rectangle
+skinparam rectangle {
+    BorderColor black
+    FontSize 10
+}
+skinparam packageStyle rectangle
+
+title Figure 4.4: Flask Application Architecture with Database Integration
+
+package "Client Layer" {
+    rectangle "Web Browser\n(HTML/CSS/JS)" as browser
+    rectangle "Video Upload\nInterface" as upload
+    rectangle "Admin Dashboard\nInterface" as admin_ui
+}
+
+package "Flask Application Layer" {
+    rectangle "Flask App\n(flaskApp_with_auth.py)" as flask_app
+    
+    package "Authentication Routes" {
+        rectangle "/login\nAuthentication" as login_route
+        rectangle "/register\nUser Registration" as register_route
+        rectangle "/logout\nSession Management" as logout_route
+    }
+    
+    package "Core Application Routes" {
+        rectangle "/\nHome Page" as home_route
+        rectangle "/video\nVideo Processing" as video_route
+        rectangle "/profile\nUser Profile" as profile_route
+    }
+    
+    package "Admin Routes" {
+        rectangle "/admin/dashboard\nAdmin Panel" as admin_route
+        rectangle "/admin/users\nUser Management" as users_route
+    }
+}
+
+package "Authentication & Session Management" {
+    rectangle "Flask-Login\nSession Management" as flask_login
+    rectangle "bcrypt\nPassword Hashing" as bcrypt
+    rectangle "Session Store\nUser Sessions" as sessions
+}
+
+package "Detection & Processing Layer" {
+    rectangle "hubconfCustom.py\nDetection Logic" as detection_module
+    rectangle "tracker.py\nObject Tracking" as tracking_module
+    rectangle "YOLOv8 Model\nPPE Detection" as yolo_model
+}
+
+package "Database Layer" {
+    rectangle "PostgreSQL\nDatabase Server" as postgres
+    
+    package "Database Tables" {
+        rectangle "users\nUser Accounts" as users_table
+        rectangle "user_sessions\nActive Sessions" as sessions_table
+        rectangle "detection_results\nProcessing Results" as results_table
+    }
+}
+
+package "File Storage" {
+    rectangle "static/files/\nUploaded Videos" as file_storage
+    rectangle "templates/\nHTML Templates" as templates
+}
+
+' Client to Flask connections
+browser --> flask_app : HTTP Requests
+upload --> video_route : Video Upload
+admin_ui --> admin_route : Admin Access
+
+' Flask route connections
+flask_app --> login_route
+flask_app --> register_route
+flask_app --> logout_route
+flask_app --> home_route
+flask_app --> video_route
+flask_app --> profile_route
+flask_app --> admin_route
+flask_app --> users_route
+
+' Authentication flow
+login_route --> flask_login : Authenticate
+register_route --> bcrypt : Hash Password
+flask_login --> sessions : Create Session
+bcrypt --> users_table : Store User
+
+' Detection pipeline integration
+video_route --> detection_module : Process Video
+detection_module --> tracking_module : Track Objects
+detection_module --> yolo_model : Detect PPE
+tracking_module --> results_table : Store Results
+
+' Database connections
+flask_app --> postgres : Database Queries
+users_table --> postgres
+sessions_table --> postgres
+results_table --> postgres
+
+' File operations
+video_route --> file_storage : Save/Retrieve Files
+flask_app --> templates : Render Templates
+
+@enduml

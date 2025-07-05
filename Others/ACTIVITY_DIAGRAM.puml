@@ -1,0 +1,176 @@
+@startuml
+title Activity Diagram: PPE Detection & Management System
+
+|User|
+start
+:Access System;
+
+if (User Registered?) then (No)
+  :Fill Registration Form;
+  :Submit Registration;
+  |Admin|
+  :Review Registration Request;
+  if (Approve User?) then (Yes)
+    :Activate User Account;
+    :Send Approval Notification;
+  else (No)
+    :Reject User Account;
+    :Send Rejection Notification;
+    stop
+  endif
+  |User|
+else (Yes)
+endif
+
+:Enter Login Credentials;
+if (Valid Credentials?) then (No)
+  :Show Error Message;
+  stop
+else (Yes)
+endif
+
+if (User Role?) then (Admin)
+  |Admin|
+  :Access Admin Dashboard;
+  
+  fork
+    :Manage Users;
+    :View/Approve Registrations;
+    :Suspend/Activate Users;
+  fork again
+    :View System Statistics;
+    :Monitor Detection Sessions;
+    :View Activity Logs;
+  fork again
+    :Export System Data;
+    :Generate Reports;
+  end fork
+  
+else (Regular User)
+  |User|
+  :Access Video Detection Page;
+  
+  if (Detection Method?) then (Video Upload)
+    :Select Video File;
+    :Set Confidence Level;
+    :Upload Video;
+    
+    |System|
+    :Validate File Format;
+    if (Valid File?) then (No)
+      :Show Error Message;
+      stop
+    else (Yes)
+    endif
+    
+    :Save Uploaded Video;
+    :Create Detection Session;
+    
+    |Detection Engine|
+    :Initialize ASOne Framework;
+    :Load YOLOv8 Model;
+    
+    repeat
+      :Extract Video Frame;
+      :Preprocess Frame;
+      :Run YOLOv8 Inference;
+      :Detect PPE Objects;
+      :Apply Euclidean Tracking;
+      :Analyze Safety Compliance;
+      :Draw Bounding Boxes & Icons;
+      :Count Safe/Unsafe Detections;
+    repeat while (More Frames?) is (Yes)
+    -> No;
+    
+    :Save Processed Video;
+    :Update Detection Session;
+    
+    |System|
+    :Log Detection Activity;
+    
+  else (Webcam Feed)
+    |System|
+    :Initialize Webcam;
+    :Create Webcam Session;
+    
+    |Detection Engine|
+    :Load YOLOv8 Model;
+    
+    repeat
+      :Capture Live Frame;
+      :Preprocess Frame;
+      :Run YOLOv8 Inference;
+      :Detect PPE Objects;
+      :Apply Euclidean Tracking;
+      :Analyze Safety Compliance;
+      :Draw Bounding Boxes & Icons;
+      :Stream Processed Frame;
+      :Update Live Counts;
+    repeat while (Continue Stream?) is (Yes)
+    -> No;
+    
+    :Stop Webcam;
+    :Save Session Data;
+  endif
+  
+  |User|
+  :View Detection Results;
+  :Review Safety Statistics;
+  
+  fork
+    :Download Processed Video;
+  fork again
+    :View Detection Logs;
+  fork again
+    :Check Activity History;
+  end fork
+  
+endif
+
+:Logout from System;
+|System|
+:Clear User Session;
+:Log Logout Activity;
+
+stop
+
+' Styling for clean activity diagram
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName "Segoe UI"
+skinparam shadowing false
+
+skinparam activity {
+    BackgroundColor #F8F8F8
+    BorderColor #666666
+    FontSize 9
+}
+
+skinparam activityDiamond {
+    BackgroundColor #E8F4FD
+    BorderColor #2E86AB
+    FontSize 9
+}
+
+skinparam activityStart {
+    BackgroundColor #4CAF50
+    BorderColor #2E7D32
+}
+
+skinparam activityEnd {
+    BackgroundColor #F44336
+    BorderColor #C62828
+}
+
+skinparam partition {
+    BackgroundColor #F0F0F0
+    BorderColor #333333
+    FontStyle bold
+}
+
+skinparam note {
+    BackgroundColor #FFF3E0
+    BorderColor #F57C00
+    FontSize 8
+}
+
+@enduml

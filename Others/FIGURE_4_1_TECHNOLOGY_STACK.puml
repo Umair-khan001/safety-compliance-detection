@@ -1,0 +1,73 @@
+@startuml
+!define RECTANGLE class
+
+skinparam backgroundColor white
+skinparam componentStyle rectangle
+skinparam rectangle {
+    BackgroundColor white
+    BorderColor black
+    FontSize 10
+}
+skinparam packageStyle rectangle
+skinparam maxMessageSize 150
+skinparam defaultTextAlignment center
+
+title Figure 4.1: Development Environment and Technology Stack
+
+' Layer 1: Development Tools
+package "Development Environment" {
+    rectangle "Python 3.10\nCore Language" as python
+    rectangle "VS Code\nIDE" as vscode
+    rectangle "Git\nVersion Control" as git
+}
+
+' Layer 2: Backend & Database
+package "Core Framework" {
+    rectangle "Flask 2.3.3\nWeb Framework" as flask
+    rectangle "PostgreSQL\nDatabase" as postgres
+    rectangle "Authentication\nbcrypt + dotenv" as auth
+}
+
+' Layer 3: ML Frameworks
+package "AI/ML Stack" {
+    rectangle "PyTorch\nML Framework" as torch
+    rectangle "YOLOv8\nObject Detection" as yolo
+    rectangle "OpenCV\nComputer Vision" as opencv
+}
+
+' Layer 4: Data Analysis
+package "Data & Analysis" {
+    rectangle "Pandas + NumPy\nData Processing" as dataproc
+    rectangle "Matplotlib + Seaborn\nVisualization" as viz
+}
+
+' Layer 5: Training Infrastructure
+package "Cloud & Training" {
+    rectangle "Google Colab\nCloud Training" as colab
+    rectangle "Roboflow\nDataset Platform" as roboflow
+}
+
+' Layer 6: Deployment
+package "Deployment Options" {
+    rectangle "Flask Dev Server\n(Local)" as devserver
+    rectangle "Google App Engine\n(Production)" as gae
+}
+
+' Vertical flow of interactions
+python -down-> flask : "Web App"
+flask -down-> postgres : "Data Storage"
+flask -down-> auth : "Security"
+
+python -down-> torch
+torch -down-> yolo
+yolo -down-> opencv
+
+yolo -down-> dataproc
+dataproc -down-> viz
+
+colab -down-> yolo
+roboflow -down-> yolo
+
+flask -down-> devserver
+flask -down-> gae
+@enduml

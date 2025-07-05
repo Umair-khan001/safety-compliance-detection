@@ -1,0 +1,60 @@
+@startuml Webcam Live Detection Process Workflow
+!theme plain
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam activityBorderColor #2C3E50
+skinparam activityStartColor #27AE60
+skinparam activityEndColor #E74C3C
+skinparam activityArrowColor #34495E
+
+title Webcam Live Detection Process Workflow
+
+start
+:Access main application;
+:Select webcam detection;
+:Request webcam access;
+
+if (Webcam accessible?) then (no)
+  :Show webcam error;
+  stop
+else (yes)
+  :Initialize webcam capture;
+  :Setup recording session;
+  :Start live feed;
+endif
+
+:Begin continuous processing;
+
+repeat
+  :Capture webcam frame;
+  
+  if (Frame captured?) then (yes)
+    :Apply PPE detection;
+    :Update live counts;
+    :Stream processed frame;
+    
+  else (no)
+    :Handle connection error;
+    
+    if (Reconnection successful?) then (no)
+      :Show connection error;
+      stop
+    endif
+  endif
+  
+repeat while (Session continues?) is (yes)
+
+:Stop webcam session;
+:Save recorded video;
+:Log detection session;
+:Display session results;
+
+if (Start new session?) then (yes)
+  :Return to webcam detection;
+else (no)
+  :Continue to other features;
+  stop
+endif
+
+stop
+@enduml

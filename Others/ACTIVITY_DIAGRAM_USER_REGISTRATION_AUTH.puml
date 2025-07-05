@@ -1,0 +1,96 @@
+@startuml User Registration and Authentication Workflow
+!theme plain
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam activityBorderColor #2C3E50
+skinparam activityBackgroundColor #ECF0F1
+skinparam activityStartColor #27AE60
+skinparam activityEndColor #E74C3C
+skinparam activityArrowColor #34495E
+skinparam swimlaneWidth same
+
+title User Registration and Authentication Workflow
+
+|#LightBlue|User|
+start
+:Navigate to /login page;
+
+if (User has account?) then (yes)
+  :Enter credentials\n(email/username + password);
+  
+  |#LightGreen|System|
+  :Validate form input;
+  
+  if (Form valid?) then (no)
+    |User|
+    :Display validation errors;
+    stop
+  else (yes)
+    :Query database for user;
+    
+    if (User exists?) then (no)
+      |User|
+      :Display "Invalid credentials";
+      stop
+    else (yes)
+      :Verify password with bcrypt;
+      
+      if (Password correct?) then (no)
+        |User|
+        :Display "Invalid credentials";
+        stop
+      else (yes)
+        if (User status = 'approved'?) then (no)
+          |User|
+          :Display "Account not approved yet";
+          stop
+        else (yes)
+          :Create user session;
+          :Log user activity\n('login' event);
+          
+          if (User role = 'admin'?) then (yes)
+            |User|
+            :Redirect to Admin Dashboard;
+          else (no)
+            :Redirect to Main Application;
+          endif
+        endif
+      endif
+    endif
+  endif
+else (no)
+  :Click "Register" link;
+  :Navigate to /register page;
+  
+  :Fill registration form:\n• First Name\n• Last Name\n• Email\n• Username\n• Password\n• Phone (optional)\n• Company (optional);
+  
+  |System|
+  :Validate form input\n(length, email format, etc.);
+  
+  if (Form valid?) then (no)
+    |User|
+    :Display validation errors;
+    stop
+  else (yes)
+    :Check if email/username exists;
+    
+    if (User already exists?) then (yes)
+      |User|
+      :Display "Email or username already exists";
+      stop
+    else (no)
+      :Hash password with bcrypt;
+      :Insert new user into database\n(status = 'pending');
+      :Log user activity\n('registration' event);
+      
+      |User|
+      :Display "Registration successful!\nWait for admin approval";
+      :Redirect to login page;
+      stop
+    endif
+  endif
+endif
+
+stop
+@enduml

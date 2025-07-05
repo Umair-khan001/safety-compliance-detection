@@ -1,0 +1,118 @@
+// PPE Detection System Database Structure
+// Use DBML to define your database structure for https://dbdiagram.io/
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table users {
+  id serial [primary key, note: 'Auto-incrementing user ID']
+  email varchar(255) [unique, not null, note: 'User email address']
+  username varchar(100) [unique, not null, note: 'Unique username']
+  password_hash varchar(255) [not null, note: 'Bcrypt hashed password']
+  first_name varchar(100) [note: 'User first name']
+  last_name varchar(100) [note: 'User last name']
+  role varchar(20) [default: 'customer', note: 'admin or customer']
+  status varchar(20) [default: 'pending', note: 'pending, approved, rejected, suspended']
+  registration_date timestamp [default: 'CURRENT_TIMESTAMP', note: 'When user registered']
+  approved_date timestamp [note: 'When user was approved']
+  approved_by integer [note: 'Admin who approved the user']
+  last_login timestamp [note: 'Last login time']
+  phone varchar(20) [note: 'Phone number']
+  company varchar(200) [note: 'Company/Organization']
+  created_at timestamp [default: 'CURRENT_TIMESTAMP']
+  updated_at timestamp [default: 'CURRENT_TIMESTAMP']
+  
+  indexes {
+    email [name: 'idx_users_email']
+    status [name: 'idx_users_status']
+  }
+}
+
+Table user_activity_logs {
+  id serial [primary key, note: 'Auto-incrementing log ID']
+  user_id integer [not null, note: 'Reference to users table']
+  activity_type varchar(50) [not null, note: 'Type of activity performed']
+  description text [note: 'Detailed description of activity']
+  video_filename varchar(255) [note: 'Associated video file if applicable']
+  detection_results json [note: 'JSON object containing detection results']
+  ip_address inet [note: 'IP address of user']
+  user_agent text [note: 'Browser/client user agent']
+  created_at timestamp [default: 'CURRENT_TIMESTAMP', note: 'When activity occurred']
+  
+  indexes {
+    user_id [name: 'idx_activity_user_id']
+  }
+}
+
+Table detection_sessions {
+  id serial [primary key, note: 'Auto-incrementing session ID']
+  user_id integer [not null, note: 'Reference to users table']
+  session_type varchar(20) [note: 'webcam or video_upload']
+  video_filename varchar(255) [note: 'Name of uploaded video file']
+  confidence_threshold decimal(3,2) [note: 'Detection confidence threshold (0.00-1.00)']
+  total_detections integer [default: 0, note: 'Total number of detections']
+  safe_detections integer [default: 0, note: 'Number of safe detections']
+  unsafe_detections integer [default: 0, note: 'Number of unsafe detections']
+  session_duration integer [note: 'Session duration in seconds']
+  status varchar(20) [default: 'active', note: 'active, completed, failed']
+  started_at timestamp [default: 'CURRENT_TIMESTAMP', note: 'When session started']
+  completed_at timestamp [note: 'When session completed']
+  
+  indexes {
+    user_id [name: 'idx_detection_user_id']
+  }
+}
+
+// Relationships
+Ref: user_activity_logs.user_id > users.id [delete: cascade, note: 'User can have multiple activity logs']
+Ref: detection_sessions.user_id > users.id [delete: cascade, note: 'User can have multiple detection sessions']
+Ref: users.approved_by > users.id [note: 'Self-reference: Admin approves other users']
+
+// Table Groups (for visual organization)
+TableGroup "User Management" {
+  users
+}
+
+TableGroup "Activity Tracking" {
+  user_activity_logs
+}
+
+TableGroup "PPE Detection" {
+  detection_sessions
+}
+
+// Notes about the database
+Note users_role_constraint: '''
+  Role constraint: CHECK (role IN ('admin', 'customer'))
+'''
+
+Note users_status_constraint: '''
+  Status constraint: CHECK (status IN ('pending', 'approved', 'rejected', 'suspended'))
+'''
+
+Note session_type_constraint: '''
+  Session type constraint: CHECK (session_type IN ('webcam', 'video_upload'))
+'''
+
+Note session_status_constraint: '''
+  Session status constraint: CHECK (status IN ('active', 'completed', 'failed'))
+'''
+
+Note database_info: '''
+  PPE Detection System Database
+  
+  Database Type: PostgreSQL
+  Hosting: Neon.tech (Cloud)
+  Total Tables: 3
+  Total Relationships: 3
+  
+  Security Features:
+  - Password hashing with bcrypt
+  - Role-based access control (RBAC)
+  - Complete audit trail logging
+  - Referential integrity protection
+  
+  Performance Features:
+  - Strategic indexes on frequently queried fields
+  - JSON storage for flexible detection results
+  - Cascade deletes for data cleanup
+  - Timestamp tracking on all entities
+'''

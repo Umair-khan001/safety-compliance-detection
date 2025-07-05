@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Safety Compliance Detection System</title>
+    <link rel="icon" type="image/svg+xml" href="static/files/favicon.svg" />
 
     <!-- Bootstrap CSS & JS -->
     <link
@@ -17,6 +18,9 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
+    
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -32,6 +36,9 @@
 
     <!-- GSAP for advanced animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Lottie for avatar animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.11.0/lottie.min.js"></script>
 
     <style>
       /* CSS Reset and Global Styles */
@@ -82,6 +89,7 @@
         color: white;
         min-height: 100vh;
         overflow-x: hidden;
+        padding-top: 60px; /* Account for fixed header */
       }
 
       img {
@@ -361,7 +369,7 @@
         z-index: -1;
         transition: background 0.3s ease;
       }
-      
+
       body[data-theme="light"] .graphic-background {
         background: linear-gradient(
           to right,
@@ -371,7 +379,7 @@
           rgba(59, 130, 246, 0.05)
         );
       }
-      
+
       /* Mood-specific styling for graphic background */
       body[data-mood="original"] .graphic-background {
         background: linear-gradient(
@@ -382,7 +390,7 @@
           rgba(59, 130, 246, 0.08)
         );
       }
-      
+
       body[data-mood="calm"] .graphic-background {
         background: linear-gradient(
           to right,
@@ -392,7 +400,7 @@
           rgba(59, 130, 246, 0.07)
         );
       }
-      
+
       body[data-mood="focused"] .graphic-background {
         background: linear-gradient(
           to right,
@@ -402,7 +410,7 @@
           rgba(16, 185, 129, 0.06)
         );
       }
-      
+
       body[data-mood="creative"] .graphic-background {
         background: linear-gradient(
           to right,
@@ -426,7 +434,7 @@
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         opacity: 0.95;
       }
-      
+
       body[data-theme="light"] .shape {
         border: 1px solid rgba(255, 255, 255, 0.3);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -450,20 +458,22 @@
         z-index: 2;
         border-radius: 30px;
         animation: floatMain 8s infinite ease-in-out;
-        transition: background 0.3s ease, box-shadow 0.3s ease;
+        transition:
+          background 0.3s ease,
+          box-shadow 0.3s ease;
       }
-      
+
       body[data-theme="light"] .shape-1 {
         background: linear-gradient(
           135deg,
           rgba(59, 130, 246, 0.15),
-          rgba(168, 85, 247, 0.20)
+          rgba(168, 85, 247, 0.2)
         );
         box-shadow:
           0 20px 40px rgba(59, 130, 246, 0.08),
           0 0 80px rgba(168, 85, 247, 0.08);
       }
-      
+
       /* Mood-specific styling for shape-1 */
       body[data-mood="calm"] .shape-1 {
         background: linear-gradient(
@@ -475,7 +485,7 @@
           0 20px 40px rgba(59, 130, 246, 0.2),
           0 0 80px rgba(99, 102, 241, 0.2);
       }
-      
+
       body[data-mood="focused"] .shape-1 {
         background: linear-gradient(
           135deg,
@@ -486,7 +496,7 @@
           0 20px 40px rgba(16, 185, 129, 0.2),
           0 0 80px rgba(59, 130, 246, 0.2);
       }
-      
+
       body[data-mood="creative"] .shape-1 {
         background: linear-gradient(
           135deg,
@@ -537,7 +547,7 @@
         border-radius: 20px;
         animation: floatThird 9s infinite ease-in-out reverse;
       }
-      
+
       /* Mood-specific styling for shapes 2, 3, and 4 */
       body[data-mood="calm"] .shape-2 {
         background: linear-gradient(
@@ -549,7 +559,7 @@
           0 15px 35px rgba(59, 130, 246, 0.15),
           0 0 60px rgba(99, 102, 241, 0.15);
       }
-      
+
       body[data-mood="focused"] .shape-2 {
         background: linear-gradient(
           135deg,
@@ -560,7 +570,7 @@
           0 15px 35px rgba(16, 185, 129, 0.15),
           0 0 60px rgba(59, 130, 246, 0.15);
       }
-      
+
       body[data-mood="creative"] .shape-2 {
         background: linear-gradient(
           135deg,
@@ -571,7 +581,7 @@
           0 15px 35px rgba(139, 92, 246, 0.15),
           0 0 60px rgba(236, 72, 153, 0.15);
       }
-      
+
       body[data-mood="calm"] .shape-3 {
         background: linear-gradient(
           135deg,
@@ -582,7 +592,7 @@
           0 15px 35px rgba(59, 130, 246, 0.15),
           0 0 50px rgba(99, 102, 241, 0.15);
       }
-      
+
       body[data-mood="focused"] .shape-3 {
         background: linear-gradient(
           135deg,
@@ -593,7 +603,7 @@
           0 15px 35px rgba(16, 185, 129, 0.15),
           0 0 50px rgba(59, 130, 246, 0.15);
       }
-      
+
       body[data-mood="creative"] .shape-3 {
         background: linear-gradient(
           135deg,
@@ -604,7 +614,7 @@
           0 15px 35px rgba(139, 92, 246, 0.15),
           0 0 50px rgba(236, 72, 153, 0.15);
       }
-      
+
       body[data-mood="calm"] .shape-4 {
         background: linear-gradient(
           135deg,
@@ -615,7 +625,7 @@
           0 10px 25px rgba(59, 130, 246, 0.15),
           0 0 40px rgba(99, 102, 241, 0.15);
       }
-      
+
       body[data-mood="focused"] .shape-4 {
         background: linear-gradient(
           135deg,
@@ -626,7 +636,7 @@
           0 10px 25px rgba(16, 185, 129, 0.15),
           0 0 40px rgba(59, 130, 246, 0.15);
       }
-      
+
       body[data-mood="creative"] .shape-4 {
         background: linear-gradient(
           135deg,
@@ -748,6 +758,536 @@
         filter: blur(60px);
         z-index: 0;
         opacity: 0.8;
+      }
+
+      /* Premium AI Avatar styles with magic elements - bottom right corner */
+      .ai-avatar-container {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 90px;
+        height: 90px;
+        z-index: 999999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        padding: 15px;
+        background-color: transparent;
+      }
+
+      .ai-avatar-container:hover {
+        transform: scale(1.1) translateY(-5px);
+      }
+
+      .ai-avatar-container:active {
+        transform: scale(0.95);
+      }
+
+      .ai-avatar-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      /* Advanced avatar with SVG face */
+      .ai-avatar {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        z-index: 12;
+        overflow: visible;
+        animation: float 5s infinite ease-in-out;
+      }
+
+      /* Avatar base - completely transparent with no shape */
+      .ai-avatar-card {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        overflow: visible;
+        transition: all 0.3s ease;
+      }
+
+      /* No background or border for any theme */
+
+      /* SVG-based face */
+      .ai-avatar-face {
+        position: absolute;
+        width: 88%;
+        height: 88%;
+        left: 6%;
+        top: 6%;
+        border-radius: 50%;
+        overflow: hidden;
+        z-index: 13;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .ai-avatar-face svg {
+        width: 100%;
+        height: 100%;
+      }
+      
+      /* Animation for the eyes in SVG */
+      @keyframes blink {
+        0%, 95%, 100% { transform: scaleY(1); }
+        97%, 98% { transform: scaleY(0.1); }
+      }
+      
+      .ai-avatar-container:hover .ai-avatar-face circle[cx="35"][cy="40"][r="5"],
+      .ai-avatar-container:hover .ai-avatar-face circle[cx="65"][cy="40"][r="5"] {
+        animation: blink 3s infinite;
+        transform-origin: center;
+      }
+      
+      /* Interactive smile animation */
+      .ai-avatar-container:hover .ai-avatar-face path[d="M 35 65 Q 50 80 65 65"] {
+        d: path("M 35 62 Q 50 75 65 62");
+        transition: d 0.3s ease;
+      }
+
+      /* PERFECT MAGICIAN HAT - improved design */
+      .ai-avatar-hat {
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%) rotate(-3deg);
+        width: 90px;
+        height: 65px;
+        z-index: 20;
+        filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: bottom center;
+        animation: floatHat 4s infinite alternate ease-in-out;
+      }
+
+      .ai-avatar-hat svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .ai-avatar-container:hover .ai-avatar-hat {
+        transform: translateX(-50%) rotate(5deg) translateY(-10px);
+        animation-play-state: paused;
+      }
+
+      /* Magic wand for the character - smaller size */
+      .ai-avatar-wand {
+        position: absolute;
+        bottom: -10px;
+        right: -15px;
+        width: 50px;
+        height: 50px;
+        z-index: 19;
+        transform: rotate(-20deg);
+        transform-origin: 20% 80%;
+        filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+        transition: all 0.3s ease;
+      }
+
+      .ai-avatar-wand svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .ai-avatar-container:hover .ai-avatar-wand {
+        transform: rotate(10deg) scale(1.1);
+      }
+
+      /* Sexy tooltip-style speech bubble - positioned to the left */
+      .ai-avatar-speech-bubble {
+        position: absolute;
+        top: -37px; /* Moved up by 12 pixels as requested */
+        right: 96px; /* Moved 4px more to the right as requested */
+        transform: translateX(10px) scale(0.9);
+        padding: 16px 20px;
+        border-radius: 22px;
+        width: 280px;
+        max-width: 90vw;
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 0.2px;
+        line-height: 1.5;
+        z-index: 25;
+        opacity: 0;
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                  background 0.3s ease, 
+                  box-shadow 0.3s ease, 
+                  color 0.3s ease;
+        text-align: left;
+        color: white;
+        background: rgba(31, 41, 55, 0.8);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15),
+                   0 6px 12px rgba(139, 92, 246, 0.1),
+                   inset 0 1px 1px rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(12px);
+        border: none;
+        transform-origin: center right;
+        will-change: transform, opacity;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      /* Light theme styling for speech bubble */
+      body[data-theme="light"] .ai-avatar-speech-bubble {
+        background: rgba(248, 250, 252, 0.85);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08),
+                  0 6px 12px rgba(139, 92, 246, 0.1),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.5);
+        color: #1e293b;
+      }
+      
+      /* Icon styling inside speech bubble */
+      .speech-icon {
+        display: inline-block;
+        margin-right: 4px;
+        vertical-align: middle;
+        animation: twinkle 1.5s infinite alternate ease-in-out;
+      }
+      
+      /* Magic sparkle text styling */
+      .magic-text {
+        background: linear-gradient(45deg, #7e22ce, #d946ef);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
+        animation: pulseMystic 1.5s infinite alternate ease-in-out;
+      }
+
+      /* Theme-specific styling for speech bubble - more transparent */
+      body[data-mood="calm"] .ai-avatar-speech-bubble {
+        background: rgba(59, 130, 246, 0.35);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15),
+                   0 6px 12px rgba(59, 130, 246, 0.15),
+                   inset 0 1px 1px rgba(255, 255, 255, 0.07);
+        color: white;
+      }
+      body[data-mood="calm"] .ai-avatar-speech-bubble:after {
+        border-left-color: rgba(59, 130, 246, 0.35);
+      }
+      /* Light theme mood-specific */
+      body[data-theme="light"][data-mood="calm"] .ai-avatar-speech-bubble {
+        background: rgba(59, 130, 246, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08),
+                   0 6px 12px rgba(59, 130, 246, 0.1),
+                   inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        color: #1e293b;
+      }
+      body[data-theme="light"][data-mood="calm"] .ai-avatar-speech-bubble:after {
+        border-left-color: rgba(59, 130, 246, 0.2);
+      }
+
+      body[data-mood="focused"] .ai-avatar-speech-bubble {
+        background: rgba(14, 165, 233, 0.35);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15),
+                   0 6px 12px rgba(14, 165, 233, 0.15),
+                   inset 0 1px 1px rgba(255, 255, 255, 0.07);
+        color: white;
+      }
+      body[data-mood="focused"] .ai-avatar-speech-bubble:after {
+        border-left-color: rgba(14, 165, 233, 0.35);
+      }
+      /* Light theme mood-specific */
+      body[data-theme="light"][data-mood="focused"] .ai-avatar-speech-bubble {
+        background: rgba(14, 165, 233, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08),
+                   0 6px 12px rgba(14, 165, 233, 0.1),
+                   inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        color: #1e293b;
+      }
+      body[data-theme="light"][data-mood="focused"] .ai-avatar-speech-bubble:after {
+        border-left-color: rgba(14, 165, 233, 0.2);
+      }
+
+      /* Updated creative mood speech bubble to match header's purple to pink gradient */
+      body[data-mood="creative"] .ai-avatar-speech-bubble {
+        background: linear-gradient(
+          135deg,
+          rgba(139, 92, 246, 0.38),
+          rgba(217, 70, 239, 0.32)
+        );
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15),
+                   0 6px 12px rgba(139, 92, 246, 0.15),
+                   inset 0 1px 1px rgba(255, 255, 255, 0.07);
+        color: white;
+      }
+      body[data-mood="creative"] .ai-avatar-speech-bubble:after {
+        border-left-color: rgba(139, 92, 246, 0.38);
+      }
+      /* Light theme mood-specific */
+      /* Updated creative mood light theme speech bubble to match gradient */
+      body[data-theme="light"][data-mood="creative"] .ai-avatar-speech-bubble {
+        background: linear-gradient(
+          135deg,
+          rgba(139, 92, 246, 0.22),
+          rgba(217, 70, 239, 0.18)
+        );
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08),
+                   0 6px 12px rgba(139, 92, 246, 0.1),
+                   inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        color: #1e293b;
+      }
+      body[data-theme="light"][data-mood="creative"] .ai-avatar-speech-bubble:after {
+        border-left-color: rgba(139, 92, 246, 0.22);
+      }
+      
+      /* Original theme mood - transparent speech bubble */
+      body[data-mood="original"] .ai-avatar-speech-bubble {
+        background: rgba(125, 95, 255, 0.35);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15),
+                   0 6px 12px rgba(125, 95, 255, 0.15),
+                   inset 0 1px 1px rgba(255, 255, 255, 0.07);
+        color: white;
+      }
+      
+      body[data-mood="original"] .ai-avatar-speech-bubble:after {
+        border-left-color: rgba(125, 95, 255, 0.35);
+      }
+      
+      body[data-theme="light"][data-mood="original"] .ai-avatar-speech-bubble {
+        background: rgba(125, 95, 255, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08),
+                   0 6px 12px rgba(125, 95, 255, 0.1),
+                   inset 0 1px 1px rgba(255, 255, 255, 0.7);
+        color: #1e293b;
+      }
+      
+      body[data-theme="light"][data-mood="original"] .ai-avatar-speech-bubble:after {
+        border-left-color: rgba(125, 95, 255, 0.2);
+      }
+
+      .ai-avatar-speech-bubble:after {
+        content: "";
+        position: absolute;
+        right: -10px;
+        top: 50%;
+        width: 0;
+        height: 0;
+        transform: translateY(-50%);
+        border-left: 15px solid rgba(31, 41, 55, 0.8); /* Base dark theme color */
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.1));
+        z-index: 0;
+        transition: border-left-color 0.3s ease;
+      }
+      
+      /* Light theme styling for speech bubble pointer */
+      body[data-theme="light"] .ai-avatar-speech-bubble:after {
+        border-left-color: rgba(248, 250, 252, 0.85);
+        filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.05));
+      }
+
+      .ai-avatar-container:hover .ai-avatar-speech-bubble {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+      
+      /* Speech bubble show and auto-hide animation classes */
+      .speech-bubble-show {
+        opacity: 1 !important;
+        transform: translateX(0) scale(1) !important;
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+      
+      .speech-bubble-hide {
+        animation: fadeOut 0.5s ease-in forwards;
+      }
+      
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateX(10px) scale(0.9);
+          filter: blur(2px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+          filter: blur(0);
+        }
+      }
+      
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+          filter: blur(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(10px) scale(0.9);
+          filter: blur(2px);
+        }
+      }
+
+      /* Magical glow around the avatar */
+      .ai-avatar-glow {
+        position: absolute;
+        width: 250%;
+        height: 250%;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        filter: blur(40px);
+        z-index: 11;
+        opacity: 0.8;
+        animation: pulseGlow 5s infinite alternate ease-in-out;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(124, 58, 237, 0.5) 0%,
+          rgba(88, 28, 135, 0.3) 40%,
+          rgba(0, 0, 0, 0) 80%
+        );
+      }
+
+      /* Theme-specific styling for avatar glow */
+      body[data-mood="calm"] .ai-avatar-glow {
+        background: radial-gradient(
+          ellipse at center,
+          rgba(59, 130, 246, 0.5) 0%,
+          rgba(37, 99, 235, 0.3) 40%,
+          rgba(0, 0, 0, 0) 80%
+        );
+      }
+
+      body[data-mood="focused"] .ai-avatar-glow {
+        background: radial-gradient(
+          ellipse at center,
+          rgba(14, 165, 233, 0.5) 0%,
+          rgba(6, 182, 212, 0.3) 40%,
+          rgba(0, 0, 0, 0) 80%
+        );
+      }
+
+      body[data-mood="creative"] .ai-avatar-glow {
+        background: radial-gradient(
+          ellipse at center,
+          rgba(139, 92, 246, 0.5) 0%,
+          rgba(219, 39, 119, 0.3) 40%,
+          rgba(0, 0, 0, 0) 80%
+        );
+      }
+
+      /* Magic particles container */
+      .magic-particles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 30;
+      }
+
+      /* Magic particles that float around and twinkle */
+      .magic-spark {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: white;
+        pointer-events: none;
+        opacity: 0;
+        z-index: 30;
+        box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.8);
+      }
+
+      /* Star shapes for magic */
+      .magic-star {
+        position: absolute;
+        width: 0;
+        height: 0;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 30;
+      }
+
+      /* Whimsical floating animation for the avatar */
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0) rotateY(0deg);
+        }
+        25% {
+          transform: translateY(-8px) rotateY(5deg);
+        }
+        75% {
+          transform: translateY(8px) rotateY(-5deg);
+        }
+      }
+
+      /* Floating animation for the hat */
+      @keyframes floatHat {
+        0%, 100% {
+          transform: translateX(-50%) rotate(-5deg);
+        }
+        50% {
+          transform: translateX(-50%) rotate(3deg) translateY(-8px);
+        }
+      }
+
+      /* Pulsing glow effect */
+      @keyframes pulseGlow {
+        0%, 100% {
+          opacity: 0.6;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        50% {
+          opacity: 0.8;
+          transform: translate(-50%, -50%) scale(1.2);
+        }
+      }
+
+      /* Mystical inner glow animation */
+      @keyframes pulseMystic {
+        0% {
+          opacity: 0.7;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+      }
+
+      /* Eye blinking animation */
+      @keyframes blinkEye {
+        0%, 30%, 36%, 100% {
+          transform: translate(-50%, -50%) scaleY(1);
+        }
+        32%, 34% {
+          transform: translate(-50%, -50%) scaleY(0.1);
+        }
+      }
+
+      /* Star twinkling animation */
+      @keyframes twinkle {
+        0%, 100% {
+          opacity: 0.2;
+          transform: scale(0.8);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+      }
+
+      @keyframes waveHand {
+        0%, 100% {
+          transform: rotate(0deg);
+        }
+        25% {
+          transform: rotate(15deg);
+        }
+        75% {
+          transform: rotate(-15deg);
+        }
       }
 
       /* Media queries for shape responsiveness */
@@ -899,9 +1439,11 @@
         border-radius: 3px;
         box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
         opacity: 0.8;
-        transition: background 0.3s ease, box-shadow 0.3s ease;
+        transition:
+          background 0.3s ease,
+          box-shadow 0.3s ease;
       }
-      
+
       /* Mood-specific separator styling */
       body[data-mood="calm"] .separator {
         background: linear-gradient(
@@ -913,7 +1455,7 @@
         );
         box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
       }
-      
+
       body[data-mood="focused"] .separator {
         background: linear-gradient(
           to right,
@@ -924,7 +1466,7 @@
         );
         box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
       }
-      
+
       body[data-mood="creative"] .separator {
         background: linear-gradient(
           to right,
@@ -952,12 +1494,17 @@
         align-items: center;
         justify-content: space-between;
         min-height: 50px;
-        position: relative;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
         backdrop-filter: blur(8px);
         z-index: 100;
-        transition: background 0.3s ease, border-bottom 0.3s ease;
+        transition:
+          background 0.3s ease,
+          border-bottom 0.3s ease;
       }
-      
+
       body[data-theme="light"] .custom-header {
         background: linear-gradient(
           135deg,
@@ -967,18 +1514,18 @@
         border-bottom: 1px solid rgba(226, 232, 240, 0.5);
         color: #1e293b;
       }
-      
+
       /* Mood-specific styling for header text and logo */
       body[data-mood="calm"] .header-logo {
         color: #3b82f6;
         text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
       }
-      
+
       body[data-mood="focused"] .header-logo {
         color: #10b981;
         text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
       }
-      
+
       body[data-mood="creative"] .header-logo {
         color: #8b5cf6;
         text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
@@ -1015,6 +1562,32 @@
         transform: rotate(0deg);
         transition: all 0.25s ease-in-out;
       }
+      
+      /* Mood-specific hamburger icon styling - Dark theme */
+      body[data-mood="calm"] .hamburger-icon span {
+        background: linear-gradient(
+          to right,
+          rgba(59, 130, 246, 0.9),
+          rgba(96, 165, 250, 0.9)
+        );
+      }
+      
+      body[data-mood="focused"] .hamburger-icon span {
+        background: linear-gradient(
+          to right,
+          rgba(14, 165, 233, 0.9),
+          rgba(56, 189, 248, 0.9)
+        );
+      }
+      
+      /* Updated creative mood hamburger icon to match header colors (purple to pink) */
+      body[data-mood="creative"] .hamburger-icon span {
+        background: linear-gradient(
+          to right,
+          rgba(139, 92, 246, 0.9),
+          rgba(217, 70, 239, 0.9)
+        );
+      }
 
       .hamburger-icon span:nth-child(1) {
         top: 0px;
@@ -1046,7 +1619,7 @@
         position: absolute;
         right: 0;
         top: 60px;
-        background: rgba(17, 24, 39, 0.95);
+        background: rgba(17, 24, 39, 0.9);
         border: 1px solid rgba(55, 65, 81, 0.5);
         backdrop-filter: blur(8px);
         padding: 15px;
@@ -1057,6 +1630,57 @@
         visibility: hidden;
         transform: translateY(-10px);
         transition: all 0.3s ease;
+      }
+      
+      /* Mood-specific hamburger menu styling - Dark theme */
+      /* Match the speech bubble styling exactly */
+      body[data-mood="original"] .menu-items {
+        background: rgba(125, 95, 255, 0.35);
+        border: none;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15),
+                  0 6px 12px rgba(125, 95, 255, 0.15),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.07);
+        color: white;
+      }
+      
+      body[data-mood="calm"] .menu-items {
+        background: rgba(59, 130, 246, 0.35);
+        border: none;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15),
+                  0 6px 12px rgba(59, 130, 246, 0.15),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.07);
+        color: white;
+      }
+      
+      body[data-mood="focused"] .menu-items {
+        background: rgba(14, 165, 233, 0.35);
+        border: none;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15),
+                  0 6px 12px rgba(14, 165, 233, 0.15),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.07);
+        color: white;
+      }
+      
+      /* Updated creative mood gradient to match header colors (purple to pink) */
+      body[data-mood="creative"] .menu-items {
+        background: linear-gradient(
+          135deg,
+          rgba(139, 92, 246, 0.38),
+          rgba(217, 70, 239, 0.32)
+        );
+        border: none;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15),
+                  0 6px 12px rgba(139, 92, 246, 0.15),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.07);
+        color: white;
       }
 
       .hamburger-menu.active .menu-items {
@@ -1080,19 +1704,283 @@
         color: var(--blue-400);
         transform: translateX(5px);
       }
+      
+      /* Mood-specific menu item hover styles - Dark theme */
+      body[data-mood="original"] .menu-items a:hover {
+        background: linear-gradient(
+          to right,
+          rgba(37, 99, 235, 0.15),
+          rgba(147, 51, 234, 0.08)
+        );
+        color: rgba(96, 165, 250, 1);
+        box-shadow: 0 4px 8px -2px rgba(37, 99, 235, 0.12);
+      }
+      
+      body[data-mood="calm"] .menu-items a:hover {
+        background: linear-gradient(
+          to right,
+          rgba(59, 130, 246, 0.15),
+          rgba(99, 102, 241, 0.08)
+        );
+        color: rgba(96, 165, 250, 1);
+        box-shadow: 0 4px 8px -2px rgba(59, 130, 246, 0.12);
+      }
+      
+      body[data-mood="focused"] .menu-items a:hover {
+        background: linear-gradient(
+          to right,
+          rgba(14, 165, 233, 0.15),
+          rgba(59, 130, 246, 0.08)
+        );
+        color: rgba(56, 189, 248, 1);
+        box-shadow: 0 4px 8px -2px rgba(14, 165, 233, 0.12);
+      }
+      
+      body[data-mood="creative"] .menu-items a:hover {
+        background: linear-gradient(
+          to right,
+          rgba(139, 92, 246, 0.15),
+          rgba(217, 70, 239, 0.08)
+        );
+        color: rgba(167, 139, 250, 1);
+        box-shadow: 0 4px 8px -2px rgba(139, 92, 246, 0.12);
+      }
 
       .header-content {
         display: flex;
         align-items: center;
+      }      /* Shield Icon Styling */
+      .header-logo {
+        width: 36px;
+        height: 36px;
+        margin-right: 12px;
+        margin-left: 20px;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+        animation: logoEntrance 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      }
+      
+      .header-logo:hover {
+        transform: scale(1.2) rotate(8deg);
+        filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.8)) 
+                drop-shadow(0 0 35px rgba(168, 85, 247, 0.6))
+                drop-shadow(0 0 50px rgba(16, 185, 129, 0.4));
       }
 
-      /* Shield Icon Styling */
-      .header-logo {
-        font-size: 32px;
-        color: var(--blue-400);
-        margin-right: 15px;
-        margin-left: 20px;
-        text-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+      /* Enhanced SVG element animations */
+      .header-logo:hover .shield-path {
+        animation: shieldPulse 2s ease-in-out infinite;
+      }
+
+      .header-logo:hover .check-path {
+        stroke-width: 3;
+        animation: checkGlow 1.5s ease-in-out infinite;
+        filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.9));
+      }
+
+      .header-logo:hover .detail-circle {
+        animation: circleFloat 2.5s ease-in-out infinite;
+      }
+
+      /* Enhanced keyframe animations */
+      @keyframes shieldPulse {
+        0%, 100% { 
+          transform: scale(1);
+          filter: brightness(1);
+        }
+        50% { 
+          transform: scale(1.02);
+          filter: brightness(1.2);
+        }
+      }
+
+      @keyframes checkGlow {
+        0%, 100% { 
+          stroke-width: 3;
+          opacity: 1;
+        }
+        50% { 
+          stroke-width: 3.5;
+          opacity: 0.8;
+        }
+      }
+
+      @keyframes circleFloat {
+        0%, 100% { 
+          transform: translateY(0px) scale(1);
+          opacity: 0.8;
+        }
+        33% { 
+          transform: translateY(-1px) scale(1.1);
+          opacity: 1;
+        }
+        66% { 
+          transform: translateY(1px) scale(0.95);
+          opacity: 0.9;
+        }
+      }
+
+      @keyframes logoEntrance {
+        0% {
+          transform: scale(0.7) rotate(-15deg);
+          opacity: 0.5;
+          filter: drop-shadow(0 0 0px rgba(59, 130, 246, 0));
+        }
+        50% {
+          transform: scale(1.05) rotate(3deg);
+          opacity: 0.8;
+        }
+        100% {
+          transform: scale(1) rotate(0deg);
+          opacity: 1;
+          filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+        }
+      }
+
+      /* Gradient animations on hover */
+      .header-logo:hover #headerShieldGradient stop:first-child {
+        animation: gradientShift1 2s ease-in-out infinite;
+      }
+
+      .header-logo:hover #headerShieldGradient stop:last-child {
+        animation: gradientShift2 2s ease-in-out infinite;
+      }
+
+      .header-logo:hover #headerCheckGradient stop:first-child {
+        animation: checkGradientShift 1.5s ease-in-out infinite;
+      }
+
+      @keyframes gradientShift1 {
+        0%, 100% { stop-color: #3B82F6; }
+        50% { stop-color: #60A5FA; }
+      }
+
+      @keyframes gradientShift2 {
+        0%, 100% { stop-color: #A855F7; }
+        50% { stop-color: #C084FC; }
+      }
+
+      @keyframes checkGradientShift {
+        0%, 100% { stop-color: #10B981; }
+        50% { stop-color: #34D399; }
+      }
+
+      /* Enhanced click effect */
+      .header-logo:active {
+        transform: scale(1.1) rotate(5deg);
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: drop-shadow(0 0 25px rgba(59, 130, 246, 1)) 
+                drop-shadow(0 0 40px rgba(168, 85, 247, 0.8));
+      }
+
+      /* Micro-interactions for SVG paths */
+      .shield-path {
+        transition: all 0.3s ease;
+      }
+
+      .check-path {
+        transition: all 0.3s ease;
+        stroke-dasharray: 20;
+        stroke-dashoffset: 0;
+      }
+
+      .header-logo:hover .check-path {
+        animation: checkDraw 1.5s ease-in-out infinite alternate;
+      }
+
+      @keyframes checkDraw {
+        0% { stroke-dashoffset: 0; }
+        100% { stroke-dashoffset: -5; }
+      }
+
+      .detail-circle {
+        transition: all 0.3s ease;
+      }
+
+      /* Particle effects container */
+      .logo-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      .logo-particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 36px;
+        height: 36px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .header-logo:hover + .logo-particles,
+      .logo-container:hover .logo-particles {
+        opacity: 1;
+      }
+
+      .particle {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: radial-gradient(circle, #60A5FA, transparent);
+        border-radius: 50%;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .particle:nth-child(1) {
+        top: 10%;
+        left: 20%;
+        animation-delay: 0s;
+        animation-duration: 2.5s;
+      }
+
+      .particle:nth-child(2) {
+        top: 30%;
+        right: 15%;
+        animation-delay: 0.5s;
+        animation-duration: 3s;
+      }
+
+      .particle:nth-child(3) {
+        bottom: 20%;
+        left: 30%;
+        animation-delay: 1s;
+        animation-duration: 2.8s;
+      }
+
+      .particle:nth-child(4) {
+        bottom: 30%;
+        right: 25%;
+        animation-delay: 1.5s;
+        animation-duration: 3.2s;
+      }
+
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0px) scale(0.8);
+          opacity: 0.6;
+        }
+        50% {
+          transform: translateY(-8px) scale(1.2);
+          opacity: 1;
+        }
+      }
+
+      /* Enhanced header text animation */
+      .header-logo:hover ~ .header-text h1 {
+        background: linear-gradient(45deg, #60A5FA, #A855F7, #10B981, #60A5FA);
+        background-size: 300% 300%;
+        animation: gradientFlow 2s ease infinite;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      @keyframes gradientFlow {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
       }
 
       /* Header Text Container */
@@ -1117,38 +2005,28 @@
         background-clip: text;
         -webkit-text-fill-color: transparent;
         text-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
-        transition: background 0.3s ease, text-shadow 0.3s ease;
+        transition:
+          background 0.3s ease,
+          text-shadow 0.3s ease;
       }
-      
+
       /* Mood-specific styling for header text gradient */
       body[data-mood="calm"] .header-text h1 {
-        background: linear-gradient(
-          45deg,
-          #3b82f6,
-          #6366f1
-        );
+        background: linear-gradient(45deg, #3b82f6, #6366f1);
         -webkit-background-clip: text;
         background-clip: text;
         text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
       }
-      
+
       body[data-mood="focused"] .header-text h1 {
-        background: linear-gradient(
-          45deg,
-          #10b981,
-          #3b82f6
-        );
+        background: linear-gradient(45deg, #10b981, #3b82f6);
         -webkit-background-clip: text;
         background-clip: text;
         text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
       }
-      
+
       body[data-mood="creative"] .header-text h1 {
-        background: linear-gradient(
-          to right,
-          #8b5cf6,
-          #d946ef
-        );
+        background: linear-gradient(to right, #8b5cf6, #d946ef);
         -webkit-background-clip: text;
         background-clip: text;
         text-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
@@ -1162,16 +2040,16 @@
         margin: 2px 0 0 0;
         transition: color 0.3s ease;
       }
-      
+
       /* Mood-specific styling for header subtext */
       body[data-mood="calm"] .header-text p {
         color: rgba(99, 102, 241, 0.7);
       }
-      
+
       body[data-mood="focused"] .header-text p {
         color: rgba(59, 130, 246, 0.7);
       }
-      
+
       body[data-mood="creative"] .header-text p {
         color: rgba(139, 92, 246, 0.7);
       }
@@ -1218,6 +2096,134 @@
       .main-header-content .badge-container {
         justify-content: flex-start;
         margin-top: 1.5rem;
+      }
+      
+      /* Action buttons styling */
+      .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+      }
+      
+      .btn-primary, .btn-secondary {
+        padding: 12px 24px;
+        border-radius: 8px;
+        border: none;
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .btn-primary {
+        background: linear-gradient(135deg, var(--blue-600), var(--purple-600));
+        color: white;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+      }
+      
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+      }
+      
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+      }
+      
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+      
+      /* Contact form styling */
+      .contact-section {
+        padding: 4rem 0;
+        margin-top: 2rem;
+      }
+      
+      .contact-form {
+        max-width: 600px;
+        margin: 0 auto;
+        background: rgba(17, 24, 39, 0.4);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        border-radius: 1rem;
+        border: 1px solid rgba(55, 65, 81, 0.5);
+      }
+      
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+      
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--gray-300);
+      }
+      
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid rgba(55, 65, 81, 0.5);
+        border-radius: 8px;
+        background: rgba(31, 41, 55, 0.5);
+        color: white;
+        font-family: "Poppins", sans-serif;
+        transition: border-color 0.3s ease;
+      }
+      
+      .form-group input:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: var(--blue-500);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+      
+      .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+      
+      .form-error {
+        color: var(--red-400);
+        font-size: 14px;
+        margin-top: 0.5rem;
+        display: none;
+      }
+      
+      .submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, var(--blue-600), var(--purple-600));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+      }
+      
+      .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
       }
 
       /* Project overview specific badge container */
@@ -1546,7 +2552,7 @@
         animation: pulse 2s infinite;
         box-sizing: border-box;
         background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(0.9px);
+        backdrop-filter: blur(0.3px);
       }
 
       .detection-box-compliant {
@@ -1578,7 +2584,7 @@
 
       .detection-box-3 {
         bottom: 20px;
-        left: 330px;
+        left: 300px;
         width: 300px;
         height: 200px;
       }
@@ -2212,6 +3218,18 @@
         height: 100%;
         object-fit: cover;
         border-radius: 0.625rem;
+      }
+      
+      .user-icon {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(75, 85, 99, 0.8);
+        border-radius: 0.625rem;
+        color: var(--gray-400);
+        font-size: 2rem;
       }
 
       .member-info {
@@ -3126,8 +4144,59 @@
       }
 
       body[data-theme="light"] .menu-items {
-        background-color: rgba(248, 250, 252, 0.95);
+        background-color: rgba(248, 250, 252, 0.9);
         border: 1px solid rgba(226, 232, 240, 0.5);
+      }
+      
+      /* Mood-specific hamburger menu styling - Light theme */
+      /* Match the speech bubble light theme styling exactly */
+      body[data-theme="light"][data-mood="original"] .menu-items {
+        background: rgba(125, 95, 255, 0.2);
+        border: none;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08),
+                  0 6px 12px rgba(125, 95, 255, 0.1),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.7);
+        color: #1e293b;
+      }
+      
+      body[data-theme="light"][data-mood="calm"] .menu-items {
+        background: rgba(59, 130, 246, 0.2);
+        border: none;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08),
+                  0 6px 12px rgba(59, 130, 246, 0.1),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        color: #1e293b;
+      }
+      
+      body[data-theme="light"][data-mood="focused"] .menu-items {
+        background: rgba(14, 165, 233, 0.2);
+        border: none;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08),
+                  0 6px 12px rgba(14, 165, 233, 0.1),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        color: #1e293b;
+      }
+      
+      /* Updated creative mood light theme to match gradient from purple to pink */
+      body[data-theme="light"][data-mood="creative"] .menu-items {
+        background: linear-gradient(
+          135deg,
+          rgba(139, 92, 246, 0.22),
+          rgba(217, 70, 239, 0.18)
+        );
+        border: none;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08),
+                  0 6px 12px rgba(139, 92, 246, 0.1),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        color: #1e293b;
       }
 
       body[data-theme="light"] .menu-items a {
@@ -3137,6 +4206,47 @@
       body[data-theme="light"] .menu-items a:hover {
         background-color: rgba(241, 245, 249, 0.7);
         color: #0f172a;
+      }
+      
+      /* Mood-specific menu item hover styles - Light theme */
+      body[data-theme="light"][data-mood="original"] .menu-items a:hover {
+        background: linear-gradient(
+          to right,
+          rgba(37, 99, 235, 0.1),
+          rgba(147, 51, 234, 0.06)
+        );
+        color: rgb(37, 99, 235);
+        box-shadow: 0 4px 8px -2px rgba(37, 99, 235, 0.08);
+      }
+      
+      body[data-theme="light"][data-mood="calm"] .menu-items a:hover {
+        background: linear-gradient(
+          to right,
+          rgba(59, 130, 246, 0.1),
+          rgba(99, 102, 241, 0.06)
+        );
+        color: rgb(37, 99, 235);
+        box-shadow: 0 4px 8px -2px rgba(59, 130, 246, 0.08);
+      }
+      
+      body[data-theme="light"][data-mood="focused"] .menu-items a:hover {
+        background: linear-gradient(
+          to right,
+          rgba(14, 165, 233, 0.1),
+          rgba(59, 130, 246, 0.06)
+        );
+        color: rgb(2, 132, 199);
+        box-shadow: 0 4px 8px -2px rgba(14, 165, 233, 0.08);
+      }
+      
+      body[data-theme="light"][data-mood="creative"] .menu-items a:hover {
+        background: linear-gradient(
+          to right,
+          rgba(139, 92, 246, 0.1),
+          rgba(217, 70, 239, 0.06)
+        );
+        color: rgb(124, 58, 237);
+        box-shadow: 0 4px 8px -2px rgba(139, 92, 246, 0.08);
       }
 
       body[data-theme="light"] .cursor-trail {
@@ -3317,9 +4427,45 @@
     </div>
 
     <!-- Custom Header -->
-    <header class="custom-header animate-fade-in">
-      <div class="header-content">
-        <i class="fas fa-shield-alt header-logo"></i>
+    <header class="custom-header animate-fade-in">      <div class="header-content">
+        <div class="logo-container">
+          <svg class="header-logo" viewBox="0 0 32 32" width="36" height="36">
+            <defs>
+              <linearGradient id="headerShieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#A855F7;stop-opacity:1" />
+              </linearGradient>
+              <linearGradient id="headerCheckGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            
+            <path d="M16 2 L6 6 L6 16 Q6 24 16 30 Q26 24 26 16 L26 6 Z" 
+                  fill="url(#headerShieldGradient)" 
+                  stroke="#1E293B" 
+                  stroke-width="0.5"
+                  class="shield-path"/>
+            
+            <path d="M10 16 L14 20 L22 12" 
+                  stroke="url(#headerCheckGradient)" 
+                  stroke-width="2.5" 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  fill="none"
+                  class="check-path"/>
+            
+            <circle cx="11" cy="10" r="1" fill="#FFFFFF" opacity="0.8" class="detail-circle"/>
+            <circle cx="21" cy="10" r="1" fill="#FFFFFF" opacity="0.8" class="detail-circle"/>
+            <circle cx="16" cy="8" r="1" fill="#FFFFFF" opacity="0.8" class="detail-circle"/>
+          </svg>
+          <div class="logo-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+        </div>
         <div class="header-text">
           <h1>Safety Compliance Detection System</h1>
           <p>Computer Vision | Deep Learning | PPE Detection</p>
@@ -3349,6 +4495,7 @@
             ><i class="fas fa-video"></i> Detection Demo</a
           >
           <a href="#team"><i class="fas fa-users"></i> Our Team</a>
+          <!-- <a href="#contact"><i class="fas fa-envelope"></i> Contact Us</a> -->
           <a href="#contact"><i class="fas fa-envelope"></i> Contact Us</a>
         </div>
       </div>
@@ -3388,8 +4535,19 @@
                 background-color: rgba(34, 197, 94, 0.1);
                 color: var(--green-400);
               "
-              >Flask</span
+              >YOLO</span
             >
+          </div>
+            <!-- Action Buttons -->
+          <div class="action-buttons animate-fade-in animate-delay-3">
+            <button class="btn-primary" onclick="window.open('/login', '_blank')">
+              <i class="fas fa-rocket"></i>
+              Explore Project
+            </button>
+            <button class="btn-secondary" onclick="scrollToSection('contact')">
+              <i class="fas fa-envelope"></i>
+              Contact Us
+            </button>
           </div>
         </div>
         <div class="graphic-background"></div>
@@ -3729,9 +4887,9 @@
               alt="Construction site with workers"
             /> -->
             <img
-              src="./construction_site_blur.jpeg"
-              alt="Construction site with workers"
-            />
+            src="../static/files/construction_site1.jpg"
+            alt="Construction site with workers"
+          />
 
             <!-- Mockup detection elements -->
             <div class="detection-box detection-box-compliant detection-box-1">
@@ -3760,7 +4918,7 @@
             <div class="analytics-overlay">
               <div class="flex items-center justify-center">
                 <span>Safety Compliance:</span>
-                <span style="margin-left: 0.5rem; font-weight: 600">67%</span>
+                <span style="margin-left: 0.5rem; font-weight: 600">99%</span>
               </div>
               <div class="analytics-bar">
                 <div class="analytics-progress"></div>
@@ -3772,7 +4930,7 @@
           <div class="floating-card floating-card-left">
             <div class="floating-card-title">Real-time detection</div>
             <div class="floating-card-text">
-              Advanced AI processes 30 frames per second for instant safety
+              Advanced AI processes for instant safety
               alerts
             </div>
           </div>
@@ -3922,24 +5080,22 @@
               <div class="member-content">
                 <div class="member-avatar">
                   <div class="member-avatar-container">
-                    <img
-                      src="https://randomuser.me/api/portraits/men/32.jpg"
-                      alt="Team Member"
-                      class="member-avatar-img"
-                    />
+                    <div class="user-icon">
+                      <i class="fas fa-user"></i>
+                    </div>
                   </div>
                 </div>
                 <div class="member-info">
                   <h3 class="member-name">Umair Aziz</h3>
-                  <p class="member-roll">BSIT-XX</p>
+                  <p class="member-roll">BSIT-025</p>
                   <div class="member-contact">
                     <div class="contact-item">
                       <i class="fas fa-envelope contact-icon"></i>
-                      <span>umair@example.com</span>
+                      <span>umairaziz782@gmail.com</span>
                     </div>
                     <div class="contact-item">
                       <i class="fas fa-phone contact-icon"></i>
-                      <span>+92 300 1234567</span>
+                      <span>+92 3014 6018728</span>
                     </div>
                   </div>
                   <p class="member-description">
@@ -3962,24 +5118,22 @@
               <div class="member-content">
                 <div class="member-avatar">
                   <div class="member-avatar-container">
-                    <img
-                      src="https://randomuser.me/api/portraits/women/44.jpg"
-                      alt="Team Member"
-                      class="member-avatar-img"
-                    />
+                    <div class="user-icon">
+                      <i class="fas fa-user"></i>
+                    </div>
                   </div>
                 </div>
                 <div class="member-info">
-                  <h3 class="member-name">Member 2</h3>
-                  <p class="member-roll">BSIT-YY</p>
+                  <h3 class="member-name">Maryam Issa</h3>
+                  <p class="member-roll">BSIT-014</p>
                   <div class="member-contact">
                     <div class="contact-item">
                       <i class="fas fa-envelope contact-icon"></i>
-                      <span>member2@example.com</span>
+                      <span>maryamissa100@gmail.com</span>
                     </div>
                     <div class="contact-item">
                       <i class="fas fa-phone contact-icon"></i>
-                      <span>+92 300 7654321</span>
+                      <span>+92 301 9876543</span>
                     </div>
                   </div>
                   <p class="member-description">
@@ -4003,24 +5157,22 @@
               <div class="member-content">
                 <div class="member-avatar">
                   <div class="member-avatar-container">
-                    <img
-                      src="https://randomuser.me/api/portraits/men/68.jpg"
-                      alt="Team Member"
-                      class="member-avatar-img"
-                    />
+                    <div class="user-icon">
+                      <i class="fas fa-user"></i>
+                    </div>
                   </div>
                 </div>
                 <div class="member-info">
-                  <h3 class="member-name">Member 3</h3>
-                  <p class="member-roll">BSIT-ZZ</p>
+                  <h3 class="member-name">Javeria Rehman</h3>
+                  <p class="member-roll">BSIT-011</p>
                   <div class="member-contact">
                     <div class="contact-item">
                       <i class="fas fa-envelope contact-icon"></i>
-                      <span>member3@example.com</span>
+                      <span>javeriarehman@gmail.com</span>
                     </div>
                     <div class="contact-item">
                       <i class="fas fa-phone contact-icon"></i>
-                      <span>+92 301 9876543</span>
+                      <span>+92 323 9584361</span>
                     </div>
                   </div>
                   <p class="member-description">
@@ -4034,27 +5186,42 @@
         </div>
       </section>
 
-      <!-- CTA Section -->
+      <!-- Contact Form Section -->
       <div class="separator animate-fade-in"></div>
-      <section class="cta-section" id="contact">
-        <div class="cta-container animate-fade-in animate-delay-3">
-          <div class="cta-bg-glow"></div>
-          <div class="cta-card">
-            <h2 class="cta-title gradient-text">
-              Ready to Enhance Workplace Safety?
-            </h2>
-            <p class="cta-text">
-              Our Safety Compliance Detection System offers cutting-edge
-              technology to monitor and improve safety compliance in your
-              workplace.
+      <section class="contact-section" id="contact">
+        <div class="container">
+          <div class="animate-fade-in">
+            <h2 class="section-title gradient-text text-center">Contact Us</h2>
+            <p class="section-description text-center">
+              Get in touch with us to learn more about our Safety Compliance Detection System
             </p>
-            <a href="/FrontPage" target="_blank" class="btn gradient-bg">
-              <span class="btn-text">
-                Explore Project
-                <i class="fas fa-arrow-right btn-icon"></i>
-              </span>
-              <span class="btn-overlay"></span>
-            </a>
+          </div>
+          
+          <div class="contact-form animate-fade-in animate-delay-2">
+            <form id="contactForm">
+              <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" required>
+                <div class="form-error" id="nameError">Please enter your name</div>
+              </div>
+              
+              <div class="form-group">
+                <label for="email">Your Email</label>
+                <input type="email" id="email" name="email" required>
+                <div class="form-error" id="emailError">Please enter a valid email address</div>
+              </div>
+              
+              <div class="form-group">
+                <label for="message">Your Message</label>
+                <textarea id="message" name="message" required placeholder="Tell us about your safety compliance needs..."></textarea>
+                <div class="form-error" id="messageError">Please enter your message</div>
+              </div>
+              
+              <button type="submit" class="submit-btn" id="submitBtn">
+                <i class="fas fa-paper-plane"></i>
+                Contact Me
+              </button>
+            </form>
           </div>
         </div>
       </section>
@@ -4068,19 +5235,184 @@
     </div>
 
     <script>
-      // Animate elements when they come into view
+      // Global functions
+      function scrollToSection(sectionId) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }
+
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+      
+      function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.innerHTML = message;
+        toast.style.cssText = `
+          position: fixed;
+          top: 80px;
+          right: 20px;
+          background: ${type === 'success' ? 'rgba(34, 197, 94, 0.9)' : 'rgba(239, 68, 68, 0.9)'};
+          color: white;
+          padding: 16px 24px;
+          border-radius: 8px;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+          z-index: 1000;
+          backdrop-filter: blur(10px);
+          border: 1px solid ${type === 'success' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'};
+          transform: translateX(400px);
+          transition: transform 0.3s ease;
+        `;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+          toast.style.transform = 'translateX(0)';
+        }, 100);
+        
+        setTimeout(() => {
+          toast.style.transform = 'translateX(400px)';
+          setTimeout(() => {
+            if (toast.parentNode) {
+              toast.parentNode.removeChild(toast);
+            }
+          }, 300);
+        }, 5000);
+      }
+
+      // Main initialization
       document.addEventListener("DOMContentLoaded", function () {
-        // Standard fade-in animations
-        const animateElements = document.querySelectorAll(".animate-fade-in");
-
-        // Team cards animation
+        // Force team cards to be visible immediately
         const teamCards = document.querySelectorAll(".member-card");
+        teamCards.forEach((card) => {
+          card.style.opacity = "1";
+          card.style.transform = "translateY(0)";
+          card.style.visibility = "visible";
+          card.style.display = "block";
+        });
 
-        // Feature cards animation
-        const featureCards = document.querySelectorAll(".feature-card");
+        // Ensure user icons are visible in team section
+        const userIcons = document.querySelectorAll(".user-icon");
+        userIcons.forEach((icon) => {
+          icon.style.display = "flex";
+          icon.style.alignItems = "center";
+          icon.style.justifyContent = "center";
+          icon.style.width = "100%";
+          icon.style.height = "100%";
+          icon.style.fontSize = "2rem";
+          icon.style.color = "white";
+          icon.style.background = "linear-gradient(135deg, var(--blue-500), var(--purple-600))";
+          icon.style.borderRadius = "0.625rem";
+        });
 
-        // Module cards animation
-        const moduleCards = document.querySelectorAll(".module-card");
+        // Hamburger menu functionality
+        const hamburgerMenu = document.querySelector(".hamburger-menu");
+        const hamburgerIcon = document.querySelector(".hamburger-icon");
+
+        if (hamburgerIcon && hamburgerMenu) {
+          hamburgerIcon.addEventListener("click", function () {
+            hamburgerMenu.classList.toggle("active");
+          });
+        }
+
+        // Theme toggle functionality - fixed for data-theme attribute
+        const themeSwitch = document.querySelector("#checkbox");
+        const body = document.body;
+
+        if (themeSwitch) {
+          // Check for saved theme preference
+          const savedTheme = localStorage.getItem("theme");
+          if (savedTheme === "light") {
+            body.setAttribute("data-theme", "light");
+            themeSwitch.checked = true;
+          } else {
+            body.setAttribute("data-theme", "dark");
+            themeSwitch.checked = false;
+          }
+
+          themeSwitch.addEventListener("change", function () {
+            if (this.checked) {
+              body.setAttribute("data-theme", "light");
+              localStorage.setItem("theme", "light");
+            } else {
+              body.setAttribute("data-theme", "dark");
+              localStorage.setItem("theme", "dark");
+            }
+          });
+        }
+
+        // Mood toggle functionality
+        const moodToggle = document.querySelector(".mood-toggle");
+        const moodSelector = document.querySelector(".mood-selector");
+        const moodSelectorClose = document.querySelector(".mood-selector-close");
+        const moodOptions = document.querySelectorAll(".mood-option");
+        
+        // Initialize mood from localStorage or default to 'original'
+        let activeMood = localStorage.getItem("mood") || "original";
+        body.setAttribute("data-mood", activeMood);
+        
+        // Set active mood option
+        moodOptions.forEach(option => {
+          if (option.getAttribute("data-mood") === activeMood) {
+            option.classList.add("active");
+          }
+        });
+
+        if (moodToggle && moodSelector) {
+          // Toggle mood selector
+          moodToggle.addEventListener("click", (e) => {
+            e.stopPropagation();
+            moodSelector.classList.toggle("active");
+          });
+
+          // Close mood selector
+          if (moodSelectorClose) {
+            moodSelectorClose.addEventListener("click", (e) => {
+              e.stopPropagation();
+              moodSelector.classList.remove("active");
+            });
+          }
+
+          // Click outside to close mood selector
+          document.addEventListener("click", (e) => {
+            if (!moodSelector.contains(e.target) && e.target !== moodToggle) {
+              moodSelector.classList.remove("active");
+            }
+          });
+
+          // Handle mood selection
+          moodOptions.forEach((option) => {
+            const mood = option.getAttribute("data-mood");
+
+            option.addEventListener("click", () => {
+              // Remove all active classes
+              moodOptions.forEach((o) => o.classList.remove("active"));
+              
+              // Add active class to selected option
+              option.classList.add("active");
+              
+              // Set mood attribute on body
+              body.setAttribute("data-mood", mood);
+              
+              // Save to localStorage
+              localStorage.setItem("mood", mood);
+              
+              // Update active mood
+              activeMood = mood;
+              
+              // Close mood selector
+              setTimeout(() => {
+                moodSelector.classList.remove("active");
+              }, 300);
+            });
+          });
+        }
 
         // Apply delayed entrance animations and floating effect to feature/module cards
         const applyStaggeredAnimation = (elements, baseDelay = 100) => {
@@ -4126,6 +5458,10 @@
           });
         };
 
+        // Define missing variables to fix JavaScript errors
+        const featureCards = document.querySelectorAll(".feature-card");
+        const moduleCards = document.querySelectorAll(".module-card");
+
         // Feature card animation with observer
         observeElements(featureCards, (card, index) => {
           setTimeout(
@@ -4167,13 +5503,19 @@
                 const card = entry.target;
                 const delay = card.dataset.delay || 0;
 
+                // Make team cards visible immediately
+                card.style.opacity = "1";
+                card.style.transform = "translateY(0)";
+                card.style.visibility = "visible";
+                card.style.display = "block";
+
                 setTimeout(() => {
                   card.classList.add("card-animated");
                 }, delay);
               }
             });
           },
-          { threshold: 0.15 },
+          { threshold: 0.1 },
         );
 
         // Intersection Observer for feature cards
@@ -4209,6 +5551,9 @@
           },
           { threshold: 0.15 },
         );
+
+        // Define missing variables to fix JavaScript errors
+        const animateElements = document.querySelectorAll(".animate-fade-in");
 
         // Apply observers to elements
         animateElements.forEach((element) => {
@@ -4488,550 +5833,1295 @@
 
         // Add button hover effects
         const btn = document.querySelector(".btn");
-        btn.addEventListener("mouseenter", function () {
-          this.querySelector(".btn-overlay").style.opacity = "1";
-          this.querySelector(".btn-icon").style.transform = "translateX(4px)";
-          this.style.transform = "scale(1.05)";
-        });
+        if (btn) {
+          btn.addEventListener("mouseenter", function () {
+            this.querySelector(".btn-overlay").style.opacity = "1";
+            this.querySelector(".btn-icon").style.transform = "translateX(4px)";
+            this.style.transform = "scale(1.05)";
+          });
 
-        btn.addEventListener("mouseleave", function () {
-          this.querySelector(".btn-overlay").style.opacity = "0";
-          this.querySelector(".btn-icon").style.transform = "translateX(0)";
-          this.style.transform = "scale(1)";
-        });
-
-        // Hamburger menu functionality
-        const hamburgerMenu = document.querySelector(".hamburger-menu");
-        const hamburgerIcon = document.querySelector(".hamburger-icon");
-
-        hamburgerIcon.addEventListener("click", function () {
-          hamburgerMenu.classList.toggle("active");
-        });
+          btn.addEventListener("mouseleave", function () {
+            this.querySelector(".btn-overlay").style.opacity = "0";
+            this.querySelector(".btn-icon").style.transform = "translateX(0)";
+            this.style.transform = "scale(1)";
+          });
+        }
 
         // Close menu when clicking outside
-        document.addEventListener("click", function (event) {
-          if (
-            !hamburgerMenu.contains(event.target) &&
-            hamburgerMenu.classList.contains("active")
-          ) {
-            hamburgerMenu.classList.remove("active");
-          }
-        });
-
-        // Theme toggle functionality is handled below
+        if (hamburgerMenu) {
+          document.addEventListener("click", function (event) {
+            if (
+              !hamburgerMenu.contains(event.target) &&
+              hamburgerMenu.classList.contains("active")
+            ) {
+              hamburgerMenu.classList.remove("active");
+            }
+          });
+        }
 
         // Add timeline link to hamburger menu
         const timelineMenuItemHTML =
           '<a href="#timeline"><i class="fas fa-history"></i> Project Timeline</a>';
         const menuItemsContainer = document.querySelector(".menu-items");
 
-        // Insert before the Team link
-        const teamMenuItem =
-          menuItemsContainer.querySelector('a[href="#team"]');
-        if (teamMenuItem) {
-          const tempDiv = document.createElement("div");
-          tempDiv.innerHTML = timelineMenuItemHTML;
-          menuItemsContainer.insertBefore(tempDiv.firstChild, teamMenuItem);
+        if (menuItemsContainer) {
+          // Insert before the Team link
+          const teamMenuItem =
+            menuItemsContainer.querySelector('a[href="#team"]');
+          if (teamMenuItem) {
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = timelineMenuItemHTML;
+            menuItemsContainer.insertBefore(tempDiv.firstChild, teamMenuItem);
+          }
         }
 
         // Close menu when clicking on a menu item
-        const menuItems = document.querySelectorAll(".menu-items a");
-        menuItems.forEach((item) => {
-          item.addEventListener("click", function (event) {
-            hamburgerMenu.classList.remove("active");
+        if (hamburgerMenu) {
+          const menuItems = document.querySelectorAll(".menu-items a");
+          menuItems.forEach((item) => {
+            item.addEventListener("click", function (event) {
+              hamburgerMenu.classList.remove("active");
 
-            // Smooth scroll to section
-            const targetId = this.getAttribute("href").substring(1);
-            const targetElement = document.getElementById(targetId);
-            if (targetElement) {
-              window.scrollTo({
-                top: targetElement.offsetTop - 80,
-                behavior: "smooth",
+              // Smooth scroll to section
+              const targetId = this.getAttribute("href").substring(1);
+              const targetElement = document.getElementById(targetId);
+              if (targetElement) {
+                window.scrollTo({
+                  top: targetElement.offsetTop - 80,
+                  behavior: "smooth",
+                });
+              }
+
+              // Prevent default anchor behavior
+              event.preventDefault();
+            });
+          });
+        }
+      });
+    </script>
+
+    <!-- AI Avatar Animation Script -->
+    <script>
+      // AI Avatar Animation functionality
+      document.addEventListener("DOMContentLoaded", function () {
+        // Global scrollToSection function
+        window.scrollToSection = function(sectionId) {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            element.scrollIntoView({ 
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        };
+
+        // AI Avatar animation initialization can go here
+        console.log("AI Avatar animation script loaded");
+      });
+    </script>
+
+    <!-- AI Avatar Animation Script -->
+    <script>
+      // Simple Friendly AI Avatar with magical hat and wand effects
+      function initAIAvatar() {
+        // Core elements
+        const avatarElement = document.getElementById('ai-avatar');
+        const avatarWrapper = document.getElementById('ai-avatar-container');
+        const speechBubble = document.getElementById('ai-avatar-speech');
+        const speechBubbleContainer = document.querySelector('.ai-avatar-speech-bubble');
+        const magicParticles = document.getElementById('magic-particles');
+        const avatarCard = document.querySelector('.ai-avatar-card');
+        const avatarHat = document.querySelector('.ai-avatar-hat');
+        const avatarWand = document.querySelector('.ai-avatar-wand');
+        
+        // Welcome messages - split into two parts
+        const welcomeMessages = [
+          "Hi! Welcome to Safety Compliance Detection System.",
+          "Let me transform your safety systems with a touch of magic."
+        ];
+        
+        // Create beautiful magical star particle
+        function createMagicStar() {
+          // Create star container
+          const starContainer = document.createElement('div');
+          starContainer.classList.add('magic-star');
+          
+          // Random star properties
+          const size = 6 + Math.random() * 15;
+          const opacity = 0.5 + Math.random() * 0.5;
+          const duration = 1 + Math.random() * 3;
+          
+          // Random position - concentrated around avatar and hat
+          let posX, posY;
+          const placement = Math.random();
+          
+          if (placement < 0.6) { // 60% chance - around the hat
+            posX = 25 + Math.random() * 100; // Percent of container width
+            posY = Math.random() * 40; // Top area for hat
+          } else { // 40% chance - around the avatar face
+            posX = 35 + Math.random() * 80;
+            posY = 30 + Math.random() * 50;
+          }
+          
+          // Create SVG star
+          const mood = document.body.getAttribute('data-mood') || 'original';
+          let color1, color2;
+          
+          // Colors based on theme
+          if (mood === 'calm') {
+            color1 = '#93C5FD'; // light blue
+            color2 = '#818CF8'; // light indigo
+          } else if (mood === 'focused') {
+            color1 = '#6EE7B7'; // light green
+            color2 = '#93C5FD'; // light blue
+          } else if (mood === 'creative') {
+            color1 = '#C4B5FD'; // light purple
+            color2 = '#F9A8D4'; // light pink
+          } else {
+            color1 = '#C4B5FD'; // light purple
+            color2 = '#93C5FD'; // light blue
+          }
+          
+          // Create a beautiful 5-pointed star using SVG
+          const svgNS = "http://www.w3.org/2000/svg";
+          const svg = document.createElementNS(svgNS, "svg");
+          svg.setAttribute("viewBox", "0 0 50 50");
+          svg.setAttribute("width", size + "px");
+          svg.setAttribute("height", size + "px");
+          
+          // Create star shape
+          const star = document.createElementNS(svgNS, "path");
+          const points = 5; // 5-pointed star
+          let path = "";
+          const centerX = 25;
+          const centerY = 25;
+          const outerRadius = 20;
+          const innerRadius = 8;
+          
+          for (let i = 0; i < points * 2; i++) {
+            const radius = i % 2 === 0 ? outerRadius : innerRadius;
+            const x = centerX + radius * Math.cos(i * Math.PI / points);
+            const y = centerY + radius * Math.sin(i * Math.PI / points);
+            path += (i === 0 ? "M" : "L") + x + "," + y;
+          }
+          path += "Z";
+          
+          star.setAttribute("d", path);
+          
+          // Create gradient for star
+          const gradient = document.createElementNS(svgNS, "linearGradient");
+          gradient.setAttribute("id", "star-gradient-" + Math.random().toString(36).substr(2, 9));
+          
+          const stop1 = document.createElementNS(svgNS, "stop");
+          stop1.setAttribute("offset", "0%");
+          stop1.setAttribute("stop-color", color1);
+          
+          const stop2 = document.createElementNS(svgNS, "stop");
+          stop2.setAttribute("offset", "100%");
+          stop2.setAttribute("stop-color", color2);
+          
+          gradient.appendChild(stop1);
+          gradient.appendChild(stop2);
+          
+          // Add filter for glow
+          const filter = document.createElementNS(svgNS, "filter");
+          filter.setAttribute("id", "star-filter-" + Math.random().toString(36).substr(2, 9));
+          
+          const gaussianBlur = document.createElementNS(svgNS, "feGaussianBlur");
+          gaussianBlur.setAttribute("in", "SourceGraphic");
+          gaussianBlur.setAttribute("stdDeviation", "1.5");
+          filter.appendChild(gaussianBlur);
+          
+          // Add defs section
+          const defs = document.createElementNS(svgNS, "defs");
+          defs.appendChild(gradient);
+          defs.appendChild(filter);
+          
+          // Apply gradient and filter
+          star.setAttribute("fill", "url(#" + gradient.getAttribute("id") + ")");
+          star.setAttribute("filter", "url(#" + filter.getAttribute("id") + ")");
+          
+          // Add elements
+          svg.appendChild(defs);
+          svg.appendChild(star);
+          starContainer.appendChild(svg);
+          
+          // Set star position and initial styles
+          starContainer.style.position = "absolute";
+          starContainer.style.left = posX + "%";
+          starContainer.style.top = posY + "%";
+          starContainer.style.opacity = "0";
+          starContainer.style.transform = "scale(0.5) rotate(0deg)";
+          
+          // Add to container
+          magicParticles.appendChild(starContainer);
+          
+          // Animate with GSAP for smoother and more complex animation
+          gsap.to(starContainer, {
+            duration: 0.3,
+            opacity: opacity,
+            scale: 1,
+            ease: "power2.out"
+          });
+          
+          gsap.to(starContainer, {
+            duration: duration,
+            rotation: Math.random() > 0.5 ? "+=120" : "-=120",
+            ease: "sine.inOut",
+            repeat: 1,
+            yoyo: true
+          });
+          
+          // Sparkling effect
+          gsap.to(starContainer, {
+            duration: duration / 3,
+            opacity: 1,
+            yoyo: true,
+            repeat: 5,
+            ease: "sine.inOut"
+          });
+          
+          // Final fadeout and cleanup
+          gsap.to(starContainer, {
+            delay: duration * 1.8,
+            duration: 0.5,
+            opacity: 0,
+            scale: 1.5,
+            ease: "power2.in",
+            onComplete: () => {
+              starContainer.remove();
+            }
+          });
+        }
+        
+        // Create magic sparkle particle
+        function createMagicSparkle() {
+          const particle = document.createElement('div');
+          particle.classList.add('magic-spark');
+          
+          // Random properties for more natural variation
+          const size = 3 + Math.random() * 6;
+          
+          // Random position relative to avatar or wand
+          const isNearWand = Math.random() > 0.6;
+          let posX, posY;
+          
+          if (isNearWand) {
+            // Position near wand tip
+            posX = 70 + Math.random() * 20;
+            posY = 55 + Math.random() * 20;
+          } else {
+            // Random position around avatar
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 40 + Math.random() * 50;
+            posX = 50 + Math.cos(angle) * distance / 2;
+            posY = 50 + Math.sin(angle) * distance / 2;
+          }
+          
+          // Set position and size
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+          particle.style.left = `${posX}%`;
+          particle.style.top = `${posY}%`;
+          
+          // Color based on theme
+          const mood = document.body.getAttribute('data-mood') || 'original';
+          let color;
+          
+          if (mood === 'calm') {
+            color = `rgba(${59 + Math.random() * 40}, ${130 + Math.random() * 40}, ${246 + Math.random() * 10}, ${0.8 + Math.random() * 0.2})`;
+          } else if (mood === 'focused') {
+            color = `rgba(${16 + Math.random() * 40}, ${165 + Math.random() * 40}, ${235 + Math.random() * 20}, ${0.8 + Math.random() * 0.2})`;
+          } else if (mood === 'creative') {
+            color = `rgba(${139 + Math.random() * 40}, ${92 + Math.random() * 40}, ${246 + Math.random() * 10}, ${0.8 + Math.random() * 0.2})`;
+          } else {
+            color = `rgba(${168 + Math.random() * 40}, ${85 + Math.random() * 40}, ${247 + Math.random() * 10}, ${0.8 + Math.random() * 0.2})`;
+          }
+          
+          particle.style.background = color;
+          particle.style.boxShadow = `0 0 10px 3px ${color}`;
+          
+          // Add to container
+          magicParticles.appendChild(particle);
+          
+          // Movement animation
+          gsap.to(particle, {
+            duration: 1 + Math.random() * 2,
+            x: Math.random() * 120 - 60,
+            y: Math.random() * 120 - 60,
+            opacity: 0,
+            scale: 0,
+            ease: "power2.out",
+            onComplete: () => {
+              particle.remove();
+            }
+          });
+        }
+        
+        // Create a burst of magic - more stars/sparkles at once
+        function createMagicBurst(intensity = 1) {
+          const starCount = Math.floor(5 * intensity);
+          const sparkleCount = Math.floor(15 * intensity);
+          
+          // Create stars with slight delay between them
+          for (let i = 0; i < starCount; i++) {
+            setTimeout(() => createMagicStar(), i * 80);
+          }
+          
+          // Create sparkles with very slight delay
+          for (let i = 0; i < sparkleCount; i++) {
+            setTimeout(() => createMagicSparkle(), i * 40);
+          }
+        }
+        
+        // Advanced 3D floating effect for the avatar
+        gsap.to(avatarElement, {
+          rotationY: 5,
+          rotationX: 5,
+          duration: 4,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut"
+        });
+        
+        // Cosmic parallax effect for avatar elements
+        function initParallaxEffect() {
+          avatarWrapper.addEventListener('mousemove', (e) => {
+            const rect = avatarWrapper.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            
+            // Different layers move at different speeds (parallax)
+            gsap.to(avatarElement, {
+              rotationY: x * 10,
+              rotationX: -y * 10,
+              duration: 0.5,
+              ease: "power1.out"
+            });
+            
+            // Hat moves more dramatically
+            gsap.to(avatarHat, {
+              x: x * 15,
+              y: y * 15,
+              rotationY: x * 15,
+              rotationX: -y * 10,
+              duration: 0.5,
+              ease: "power1.out"
+            });
+            
+            // Wand follows mouse more
+            gsap.to(avatarWand, {
+              rotation: -20 + x * 30,
+              x: x * 20,
+              y: y * 10,
+              duration: 0.3,
+              ease: "power1.out"
+            });
+            
+            // Eyes follow mouse position using SVG pupils
+            const leftPupil = document.querySelector('.ai-avatar-face circle[cx="35"][cy="40"][r="5"]');
+            const rightPupil = document.querySelector('.ai-avatar-face circle[cx="65"][cy="40"][r="5"]');
+            
+            if (leftPupil && rightPupil) {
+              gsap.to([leftPupil, rightPupil], {
+                attr: { 
+                  cx: (i, target) => i === 0 ? 35 + x * 3 : 65 + x * 3,
+                  cy: (i, target) => i === 0 ? 40 + y * 2 : 40 + y * 2
+                },
+                duration: 0.3,
+                ease: "power1.out"
               });
             }
-
-            // Prevent default anchor behavior
-            event.preventDefault();
           });
-        });
-
-        // Theme switching functionality
-        const themeSwitch = document.querySelector("#checkbox");
-        const body = document.body;
-        const polygon = document.querySelector(".polygon");
-        const themeCards = document.querySelectorAll(
-          ".feature-card, .module-card, .problem-solution-card, .timeline-item, .member-card",
-        );
-
-        // Check for saved theme preference or use default
-        const currentTheme = localStorage.getItem("theme");
-
-        if (currentTheme) {
-          body.classList.add(currentTheme);
-          if (currentTheme === "light-theme") {
-            themeSwitch.checked = true;
-            applyLightTheme();
-          }
-        }
-
-        // Function to apply light theme styles
-        function applyLightTheme() {
-          body.style.background =
-            "linear-gradient(to bottom, #f9fafb, #f3f4f6, #f9fafb)";
-          body.style.color = "#1f2937";
-
-          // Update polygon style
-          if (polygon) {
-            polygon.style.background =
-              "linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(168, 85, 247, 0.2))";
-            polygon.style.boxShadow = "0 0 30px rgba(99, 102, 241, 0.4)";
-          }
-
-          // Update cards
-          themeCards.forEach((card) => {
-            card.style.backgroundColor = "rgba(255, 255, 255, 0.7)";
-            card.style.borderColor = "rgba(209, 213, 219, 0.8)";
+          
+          // Reset on mouse leave
+          avatarWrapper.addEventListener('mouseleave', () => {
+            gsap.to([avatarElement, avatarHat, avatarWand], {
+              rotationY: 0,
+              rotationX: 0,
+              x: 0,
+              y: 0,
+              rotation: (el) => el === avatarWand ? -20 : 0,
+              duration: 1,
+              ease: "elastic.out(1, 0.5)"
+            });
           });
         }
-
-        // Function to apply dark theme styles
-        function applyDarkTheme() {
-          body.style.background =
-            "linear-gradient(to bottom, var(--gray-900), var(--gray-800), var(--gray-900))";
-          body.style.color = "white";
-
-          // Update polygon style
-          if (polygon) {
-            polygon.style.background =
-              "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1))";
-            polygon.style.boxShadow = "0 0 30px rgba(99, 102, 241, 0.3)";
-          }
-
-          // Update cards
-          themeCards.forEach((card) => {
-            card.style.backgroundColor = "rgba(17, 24, 39, 0.4)";
-            card.style.borderColor = "rgba(55, 65, 81, 0.5)";
-          });
-        }
-
-        // Toggle theme on switch change
-        themeSwitch.addEventListener("change", function () {
-          if (this.checked) {
-            body.classList.replace("dark-theme", "light-theme");
-            localStorage.setItem("theme", "light-theme");
-            applyLightTheme();
+        
+        // Enhanced speech bubble animation
+        function updateSpeechBubble() {
+          // Get current theme/mood
+          const mood = document.body.getAttribute('data-mood') || 'original';
+          
+          // Get message elements
+          const messagePartOne = document.getElementById('message-part-1');
+          const messagePartTwo = document.getElementById('message-part-2');
+          
+          if (!messagePartOne || !messagePartTwo) return;
+          
+          // Toggle between first and second message
+          if (!showingSecondMessage) {
+            // Show second message
+            messagePartOne.style.display = 'none';
+            messagePartTwo.style.display = 'block';
+            showingSecondMessage = true;
           } else {
-            body.classList.replace("light-theme", "dark-theme");
-            localStorage.setItem("theme", "dark-theme");
-            applyDarkTheme();
+            // Show first message
+            messagePartOne.style.display = 'block';
+            messagePartTwo.style.display = 'none';
+            showingSecondMessage = false;
           }
-        });
-      });
-
-      // Cursor trail blur effects
-      const cursorTrailContainer = document.querySelector(
-        ".cursor-trail-container",
-      );
-      let mouseX = 0;
-      let mouseY = 0;
-      let cursorTrails = [];
-      let isMoving = false;
-      let moveTimeout;
-      let lastX = 0;
-      let lastY = 0;
-      let velocityX = 0;
-      let velocityY = 0;
-      const maxTrails = 15;
-      const colors = [
-        "rgba(59, 130, 246, 0.5)", // Blue
-        "rgba(99, 102, 241, 0.5)", // Indigo
-        "rgba(139, 92, 246, 0.5)", // Purple
-        "rgba(236, 72, 153, 0.5)", // Pink
-        "rgba(16, 185, 129, 0.5)", // Green
-      ];
-
-      // Create initial cursor trails
-      for (let i = 0; i < maxTrails; i++) {
-        createCursorTrail();
-      }
-
-      function createCursorTrail() {
-        const trail = document.createElement("div");
-        trail.className = "cursor-trail";
-        trail.style.width = "0px";
-        trail.style.height = "0px";
-        trail.style.backgroundColor =
-          colors[Math.floor(Math.random() * colors.length)];
-        trail.style.zIndex = 9999;
-        cursorTrailContainer.appendChild(trail);
-        cursorTrails.push({
-          element: trail,
-          x: 0,
-          y: 0,
-          scale: 0,
-          alpha: 0,
-          targetX: 0,
-          targetY: 0,
-          targetScale: 0,
-          targetAlpha: 0,
-          delay: 0,
-        });
-      }
-
-      // Track mouse position
-      document.addEventListener("mousemove", (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-
-        // Calculate velocity
-        velocityX = mouseX - lastX;
-        velocityY = mouseY - lastY;
-        lastX = mouseX;
-        lastY = mouseY;
-
-        isMoving = true;
-        clearTimeout(moveTimeout);
-        moveTimeout = setTimeout(() => {
-          isMoving = false;
-        }, 100);
-      });
-
-      // Animation loop
-      function animateCursorTrails() {
-        if (isMoving) {
-          // Calculate the speed (magnitude of velocity)
-          const speed = Math.sqrt(
-            velocityX * velocityX + velocityY * velocityY,
-          );
-          const normalizedSpeed = Math.min(speed, 50) / 50; // Cap and normalize speed
-
-          // Add a new point when mouse is moving
-          for (let i = 0; i < cursorTrails.length; i++) {
-            const trail = cursorTrails[i];
-
-            // Set target values with a delay based on index
-            trail.targetX = mouseX;
-            trail.targetY = mouseY;
-
-            // Size based on speed
-            const baseSize = 15 + normalizedSpeed * 25;
-            const scaledSize = baseSize * (1 - i / cursorTrails.length);
-            trail.targetScale = scaledSize;
-
-            // Alpha also depends on speed and index
-            trail.targetAlpha =
-              0.3 + normalizedSpeed * 0.5 * (1 - i / cursorTrails.length);
-
-            // Select color based on speed
-            let colorIndex;
-            if (normalizedSpeed < 0.2) {
-              colorIndex = 0; // Blue for slow
-            } else if (normalizedSpeed < 0.5) {
-              colorIndex = 1; // Indigo
-            } else if (normalizedSpeed < 0.7) {
-              colorIndex = 2; // Purple
-            } else if (normalizedSpeed < 0.9) {
-              colorIndex = 3; // Pink
+          
+          // Create a medium magic burst
+          createMagicBurst(0.7);
+        }
+        
+        // Update cosmic theme colors
+        function updateAvatarTheme() {
+          const mood = document.body.getAttribute('data-mood') || 'original';
+          const theme = document.body.getAttribute('data-theme') || 'dark';
+          
+          // Update magical star colors
+          createMagicBurst(0.3);
+          
+          // Update hat band gradient
+          const hatBandGradient = document.querySelector('#hat-band-gradient');
+          if (hatBandGradient) {
+            updateSvgGradient(hatBandGradient, {
+              calm: ['#3B82F6', '#6366F1', '#818CF8'],
+              focused: ['#10B981', '#0EA5E9', '#3B82F6'],
+              creative: ['#8B5CF6', '#A855F7', '#EC4899'],
+              original: ['#6366F1', '#A855F7', '#EC4899']
+            });
+          }
+          
+          // Update wand gradient
+          const wandGradient = document.querySelector('#wand-gradient');
+          if (wandGradient) {
+            updateSvgGradient(wandGradient, {
+              calm: ['#3B82F6', '#1D4ED8'],
+              focused: ['#0EA5E9', '#0369A1'],
+              creative: ['#8B5CF6', '#7E22CE'],
+              original: ['#4F46E5', '#7E22CE']
+            });
+          }
+          
+          // Update wand tip gradient
+          const wandTipGradient = document.querySelector('#wand-tip-gradient');
+          if (wandTipGradient) {
+            updateSvgGradient(wandTipGradient, {
+              calm: ['#93C5FD', '#60A5FA'],
+              focused: ['#6EE7B7', '#34D399'],
+              creative: ['#E879F9', '#F9A8D4'],
+              original: ['#E879F9', '#F9A8D4']
+            });
+          }
+          
+          // Apply cosmic animation variation based on theme
+          if (mood === 'calm') {
+            gsap.to(avatarElement, { duration: 6, repeat: -1, yoyo: true, ease: "sine.inOut" });
+          } else if (mood === 'focused') {
+            gsap.to(avatarElement, { duration: 4, repeat: -1, yoyo: true, ease: "power1.inOut" });
+          } else if (mood === 'creative') {
+            gsap.to(avatarElement, { duration: 5, repeat: -1, yoyo: true, ease: "elastic.out(1, 0.3)" });
+          }
+          
+          // Add a burst of themed magic particles
+          createMagicBurst(1);
+        }
+        
+        // Helper function to update SVG gradients based on theme
+        function updateSvgGradient(gradientElement, themeColors) {
+          if (!gradientElement) return;
+          
+          const mood = document.body.getAttribute('data-mood') || 'original';
+          const colors = themeColors[mood] || themeColors.original;
+          
+          // Clear existing stops
+          while (gradientElement.firstChild) {
+            gradientElement.removeChild(gradientElement.firstChild);
+          }
+          
+          // Add new stops
+          colors.forEach((color, index) => {
+            const stop = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+            stop.setAttribute("offset", `${index * (100 / (colors.length - 1))}%`);
+            stop.setAttribute("stop-color", color);
+            gradientElement.appendChild(stop);
+          });
+        }
+        
+        // Continuous magic sparkle effect
+        let particleInterval = setInterval(() => {
+          if (Math.random() > 0.6) {
+            if (Math.random() > 0.7) {
+              createMagicStar();
             } else {
-              colorIndex = 4; // Green for fast
+              createMagicSparkle();
             }
-            trail.element.style.backgroundColor = colors[colorIndex];
           }
-        } else {
-          // Fade out when not moving
-          cursorTrails.forEach((trail) => {
-            trail.targetAlpha *= 0.95;
+        }, 1000);
+        
+        // Enhanced hover interaction
+        avatarWrapper.addEventListener('mouseenter', () => {
+          // Update speech bubble and create magic effect
+          updateSpeechBubble();
+          
+          // Animate hat levitation
+          gsap.to(avatarHat, {
+            duration: 0.8,
+            y: -15,
+            rotation: 5,
+            ease: "power2.out"
           });
-        }
-
-        // Update all trails with easing
-        for (let i = 0; i < cursorTrails.length; i++) {
-          const trail = cursorTrails[i];
-          const delay = i * 2; // Delay based on index
-
-          // Apply delayed target values with easing
-          trail.x += (trail.targetX - trail.x) * 0.05;
-          trail.y += (trail.targetY - trail.y) * 0.05;
-          trail.scale += (trail.targetScale - trail.scale) * 0.1;
-          trail.alpha += (trail.targetAlpha - trail.alpha) * 0.1;
-
-          // Apply values to DOM
-          trail.element.style.opacity = trail.alpha;
-          trail.element.style.width = trail.scale + "px";
-          trail.element.style.height = trail.scale + "px";
-          trail.element.style.transform = `translate(${trail.x - trail.scale / 2}px, ${trail.y - trail.scale / 2}px)`;
-          trail.element.style.filter = `blur(${trail.scale / 2}px)`;
-        }
-
-        requestAnimationFrame(animateCursorTrails);
-      }
-
-      // Start animation
-      animateCursorTrails();
-
-      // Enhanced Mood-based color gradient generator
-      const moodToggle = document.querySelector(".mood-toggle");
-      const moodSelector = document.querySelector(".mood-selector");
-      const moodOptions = document.querySelectorAll(".mood-option");
-      const moodSelectorClose = document.querySelector(".mood-selector-close");
-      let activeMood = localStorage.getItem("mood") || "calm";
-
-      // Apply saved mood on load with animation
-      document.body.setAttribute("data-mood", activeMood);
-
-      // Get the active mood option and add class
-      document
-        .querySelector(`.mood-option[data-mood="${activeMood}"]`)
-        ?.classList.add("active");
-
-      // Create a subtle ripple effect when clicking the mood toggle
-      moodToggle.addEventListener("mousedown", (e) => {
-        const ripple = document.createElement("span");
-        const rect = moodToggle.getBoundingClientRect();
-
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-
-        ripple.style.width = ripple.style.height = `${size}px`;
-        ripple.style.left = `${x}px`;
-        ripple.style.top = `${y}px`;
-        ripple.style.position = "absolute";
-        ripple.style.borderRadius = "50%";
-        ripple.style.backgroundColor = "rgba(255, 255, 255, 0.4)";
-        ripple.style.transform = "scale(0)";
-        ripple.style.animation = "ripple 0.6s linear";
-
-        moodToggle.appendChild(ripple);
-
+          
+          // Animate wand movement
+          gsap.to(avatarWand, {
+            duration: 0.5,
+            rotation: 10,
+            scale: 1.1,
+            ease: "back.out(1.7)"
+          });
+          
+          // Create magic effect
+          createMagicBurst(1);
+        });
+        
+        // Enhanced leave interaction
+        avatarWrapper.addEventListener('mouseleave', () => {
+          // Return hat to original position
+          gsap.to(avatarHat, {
+            duration: 1,
+            y: 0,
+            rotation: -5,
+            ease: "elastic.out(1, 0.5)"
+          });
+          
+          // Return wand to original position
+          gsap.to(avatarWand, {
+            duration: 0.5,
+            rotation: -20,
+            scale: 1,
+            ease: "power2.out"
+          });
+        });
+        
+        // Advanced click interaction with magical effects
+        avatarWrapper.addEventListener('click', () => {
+          // Update speech bubble - this will toggle the messages
+          updateSpeechBubble();
+          
+          // Show speech bubble
+          speechBubbleContainer.classList.add('speech-bubble-show');
+          speechBubbleContainer.classList.remove('speech-bubble-hide');
+          
+          // 3D card flip effect
+          gsap.to(avatarElement, {
+            duration: 0.6,
+            rotationY: 360,
+            ease: "power2.inOut",
+            onComplete: () => {
+              gsap.set(avatarElement, { rotationY: 0 });
+            }
+          });
+          
+          // Dramatic hat animation
+          gsap.to(avatarHat, {
+            duration: 0.8,
+            y: -30,
+            rotation: 15,
+            scale: 1.2,
+            ease: "back.out(2)",
+            yoyo: true,
+            repeat: 1
+          });
+          
+          // Wand casting animation
+          gsap.to(avatarWand, {
+            duration: 0.3,
+            rotation: 30,
+            scale: 1.2,
+            ease: "back.out(3)",
+            yoyo: true,
+            repeat: 1
+          });
+          
+          // Intense magic burst
+          createMagicBurst(2);
+          
+          // Eye blink animation for SVG eyes
+          const leftPupil = document.querySelector('.ai-avatar-face circle[cx="35"][cy="40"][r="5"]');
+          const rightPupil = document.querySelector('.ai-avatar-face circle[cx="65"][cy="40"][r="5"]');
+          
+          if (leftPupil && rightPupil) {
+            gsap.to([leftPupil, rightPupil], {
+              duration: 0.1,
+              scaleY: 0.1,
+              transformOrigin: "center",
+              yoyo: true,
+              repeat: 1,
+              ease: "power2.inOut"
+            });
+          }
+        });
+        
+        // Theme change observer for reactive styling
+        const bodyObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'data-mood' || 
+                mutation.attributeName === 'data-theme') {
+              updateAvatarTheme();
+              
+              // Show the first welcome message when theme or mood is changed via observer
+              const messagePartOne = document.getElementById('message-part-1');
+              const messagePartTwo = document.getElementById('message-part-2');
+              if (messagePartOne && messagePartTwo) {
+                // Reset to first message
+                messagePartOne.style.display = 'block';
+                messagePartTwo.style.display = 'none';
+                showingSecondMessage = false;
+                
+                // Show speech bubble
+                speechBubbleContainer.classList.add('speech-bubble-show');
+                speechBubbleContainer.classList.remove('speech-bubble-hide');
+                
+                // Auto-hide after 3 seconds
+                setTimeout(() => {
+                  speechBubbleContainer.classList.remove('speech-bubble-show');
+                  speechBubbleContainer.classList.add('speech-bubble-hide');
+                }, 3000);
+              }
+            }
+          });
+        });
+        
+        bodyObserver.observe(document.body, {
+          attributes: true,
+          attributeFilter: ['data-mood', 'data-theme'],
+        });
+        
+        // Initialize parallax effects
+        initParallaxEffect();
+        
+        // Initial theme setup
+        updateAvatarTheme();
+        
+        // Initial welcome message after a short delay
         setTimeout(() => {
-          ripple.remove();
-        }, 600);
-      });
-
-      // Add ripple animation to styleSheet
-      if (!document.querySelector("#ripple-style")) {
-        const style = document.createElement("style");
-        style.id = "ripple-style";
-        style.textContent = `
-          @keyframes ripple {
-            to {
-              transform: scale(2);
-              opacity: 0;
-            }
+          // Show speech bubble
+          gsap.to(speechBubble.parentElement, {
+            duration: 0.7,
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            ease: "back.out(1.7)"
+          });
+          
+          // We don't need to set text content here as we use message-part-1 and message-part-2 elements
+          
+          // Create initial magic burst
+          createMagicBurst(1.5);
+          
+          // Extra dramatic entry animation - hat
+          gsap.from(avatarHat, {
+            duration: 1.2,
+            y: -50,
+            opacity: 0,
+            rotation: -15,
+            ease: "elastic.out(1, 0.5)"
+          });
+          
+          // Wand appears with magic
+          gsap.from(avatarWand, {
+            duration: 0.8,
+            scale: 0,
+            opacity: 0,
+            rotation: -90,
+            ease: "back.out(1.7)",
+            delay: 0.3
+          });
+        }, 800);
+        
+        // Return public methods
+        return {
+          createMagicBurst,
+          updateSpeechBubble,
+          destroy: () => {
+            clearInterval(particleInterval);
+            bodyObserver.disconnect();
           }
-        `;
-        document.head.appendChild(style);
+        };
       }
 
-      // Toggle mood selector with enhanced animation
-      moodToggle.addEventListener("click", () => {
-        const isActive = moodSelector.classList.contains("active");
-
-        if (!isActive) {
-          // When opening, stagger the animation of mood options
-          moodSelector.classList.add("active");
-
-          moodOptions.forEach((option, index) => {
-            option.style.opacity = "0";
-            option.style.transform = "translateY(20px)";
-
-            setTimeout(
-              () => {
-                option.style.transition =
-                  "all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)";
-                option.style.opacity = "1";
-                option.style.transform = "translateY(0)";
-              },
-              100 + index * 80,
-            );
-          });
-        } else {
-          // When closing, quick fade out
-          moodSelector.classList.remove("active");
-
-          moodOptions.forEach((option) => {
-            option.style.transition = "all 0.2s ease";
-          });
-        }
-      });
-
-      // Close mood selector with animation
-      moodSelectorClose.addEventListener("click", (e) => {
-        e.stopPropagation();
-        moodSelector.classList.remove("active");
-      });
-
-      // Click outside to close mood selector
-      document.addEventListener("click", (e) => {
-        if (!moodSelector.contains(e.target) && e.target !== moodToggle) {
-          moodSelector.classList.remove("active");
-        }
-      });
-
-      // Handle mood selection with enhanced visual effects
-      moodOptions.forEach((option) => {
-        const mood = option.getAttribute("data-mood");
-
-        option.addEventListener("click", () => {
-          // Apply animated transition
-          document.body.style.transition = "background 1s ease, color 1s ease";
-
-          // First remove all active classes
-          moodOptions.forEach((o) => o.classList.remove("active"));
-
-          // Add active class with animation
-          option.classList.add("active");
-
-          // Set mood attribute on body
-          document.body.setAttribute("data-mood", mood);
-
-          // Save to localStorage
-          localStorage.setItem("mood", mood);
-
-          // Update active mood
-          activeMood = mood;
-
-          // Close mood selector with slight delay for visual feedback
-          setTimeout(() => {
-            moodSelector.classList.remove("active");
-          }, 300);
-
-          // Visual feedback on the toggle button
-          moodToggle.classList.add("pulse");
-
-          // Create a flash of color
-          const flash = document.createElement("div");
-          flash.style.position = "fixed";
-          flash.style.inset = "0";
-          flash.style.backgroundColor = getColorForMood(mood);
-          flash.style.opacity = "0.1";
-          flash.style.zIndex = "9998";
-          flash.style.pointerEvents = "none";
-          flash.style.transition = "opacity 1s ease";
-          document.body.appendChild(flash);
-
-          // Fade out and remove flash
-          setTimeout(() => {
-            flash.style.opacity = "0";
-            setTimeout(() => flash.remove(), 1000);
-          }, 100);
-
-          // Remove pulse class after animation
-          setTimeout(() => {
-            moodToggle.classList.remove("pulse");
-          }, 700);
-
-          // Apply mood-specific gradients to UI elements with animation
-          updateMoodElements(true);
-        });
-      });
-
-      // Helper function to get base color for mood
-      function getColorForMood(mood) {
-        switch (mood) {
-          case "original":
-            return "rgba(125, 95, 255, 0.2)"; // Original purple
-          case "calm":
-            return "rgba(59, 130, 246, 0.2)"; // Blue
-          case "energetic":
-            return "rgba(239, 68, 68, 0.2)"; // Red
-          case "focused":
-            return "rgba(16, 185, 129, 0.2)"; // Green
-          case "creative":
-            return "rgba(139, 92, 246, 0.2)"; // Purple
-          default:
-            return "rgba(125, 95, 255, 0.2)";
-        }
-      }
-
-      // Simplified update function - ONLY changes colors, not styling
-      function updateMoodElements(animate = false) {
-        // Get current mood and theme
-        const mood = document.body.getAttribute("data-mood");
-        const theme = document.body.getAttribute("data-theme") || "dark";
-
-        // Apply to specific elements with animation if requested
-        const gradientElements = document.querySelectorAll(".gradient-text");
-
-        gradientElements.forEach((el) => {
-          if (animate) {
-            // Add transition
-            el.style.transition =
-              "opacity 0.3s ease, background-image 0.5s ease";
-            el.style.opacity = "0.5";
-
-            // Then change gradient and fade back in
+      // Variable to track which message is currently showing - moved to global scope to fix the undefined error
+      let showingSecondMessage = false;
+      
+      // Initialize AI Avatar when DOM is loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        // Create magic burst function
+        function createMagicBurst(intensity = 1) {
+          const particles = document.getElementById('magic-particles');
+          const numParticles = 15 * intensity;
+          
+          for (let i = 0; i < numParticles; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'magic-spark';
+            
+            // Random position around the avatar
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 30 + Math.random() * 60 * intensity;
+            const posX = Math.cos(angle) * distance;
+            const posY = Math.sin(angle) * distance;
+            
+            // Set particle starting position and styles
+            particle.style.left = `calc(50% + ${posX}px)`;
+            particle.style.top = `calc(50% + ${posY}px)`;
+            particle.style.opacity = '0';
+            
+            // Random size
+            const size = (2 + Math.random() * 5) * intensity;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Random color
+            const hue = 220 + Math.random() * 140;
+            const saturation = 70 + Math.random() * 30;
+            const lightness = 60 + Math.random() * 30;
+            particle.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+            particle.style.boxShadow = `0 0 ${8 * intensity}px ${4 * intensity}px hsla(${hue}, ${saturation}%, ${lightness}%, 0.7)`;
+            
+            // Add to container
+            particles.appendChild(particle);
+            
+            // Animate with delay
             setTimeout(() => {
-              el.style.backgroundImage = `var(--primary-gradient)`;
-              el.style.opacity = "1";
-
-              // Reset transition
+              particle.style.opacity = '1';
+              
+              // Random movement outward
+              const finalX = posX * (1.5 + Math.random());
+              const finalY = posY * (1.5 + Math.random());
+              
+              particle.style.transition = `all ${0.5 + Math.random() * 0.5}s ease-out`;
+              particle.style.transform = `translate(${finalX - posX}px, ${finalY - posY}px) scale(${1 + Math.random() * 0.5})`;
+              
+              // Fade out
               setTimeout(() => {
-                el.style.transition = "";
-              }, 500);
-            }, 300);
-          } else {
-            el.style.backgroundImage = `var(--primary-gradient)`;
+                particle.style.opacity = '0';
+                setTimeout(() => {
+                  if (particles.contains(particle)) {
+                    particles.removeChild(particle);
+                  }
+                }, 500);
+              }, 500 + Math.random() * 500);
+              
+            }, Math.random() * 300 * intensity);
           }
+        }
+        
+        // Initialize avatar if needed
+        if (typeof initAIAvatar === 'function') {
+          initAIAvatar();
+        }
+        
+        // Speech bubble auto-show and hide functionality
+        const speechBubbleContainer = document.querySelector('.ai-avatar-speech-bubble');
+        const avatarWrapper = document.getElementById('ai-avatar-container');
+        
+        // Get message elements
+        const messagePartOne = document.getElementById('message-part-1');
+        const messagePartTwo = document.getElementById('message-part-2');
+        
+        // Delay showing first message when page loads - wait for 2 seconds
+        messagePartOne.style.display = 'block';
+        messagePartTwo.style.display = 'none';
+        
+        // Add initial delay before showing the welcome message (5 seconds as requested)
+        setTimeout(() => {
+          // Make sure message is visible before showing bubble
+          if (messagePartOne.style.display === 'none' && messagePartTwo.style.display === 'none') {
+            messagePartOne.style.display = 'block';
+          }
+          
+          speechBubbleContainer.classList.add('speech-bubble-show');
+          speechBubbleContainer.classList.remove('speech-bubble-hide');
+          createMagicBurst(0.8); // Create small magic effect
+          
+          // Auto-hide the speech bubble after 4 seconds
+          setTimeout(() => {
+            speechBubbleContainer.classList.remove('speech-bubble-show');
+            speechBubbleContainer.classList.add('speech-bubble-hide');
+            
+            // Reset display after hide animation completes
+            setTimeout(() => {
+              messagePartOne.style.display = 'none';
+              messagePartTwo.style.display = 'none';
+            }, 500);
+          }, 4000);
+        }, 5000);
+        
+        // Show speech bubble on hover - only first message
+        avatarWrapper.addEventListener('mouseenter', () => {
+          speechBubbleContainer.classList.add('speech-bubble-show');
+          speechBubbleContainer.classList.remove('speech-bubble-hide');
+          messagePartOne.style.display = 'block';
+          messagePartTwo.style.display = 'none';
+          createMagicBurst(0.6); // Small magic effect
+          
+          // No transition to second message on hover - only first message stays
         });
+        
+        avatarWrapper.addEventListener('mouseleave', () => {
+          setTimeout(() => {
+            speechBubbleContainer.classList.remove('speech-bubble-show');
+            speechBubbleContainer.classList.add('speech-bubble-hide');
+          }, 2000); // Hide after 2 seconds when mouse leaves
+        });
+      });
+    </script>
+    <!-- Simple friendly AI avatar with magic elements - floats freely on the website -->
+    <div class="ai-avatar-container" id="ai-avatar-container">
+      <div class="ai-avatar-wrapper">
+        <!-- Magical glow effect -->
+        <div class="ai-avatar-glow"></div>
+        
+        <!-- Magical floating particles -->
+        <div class="magic-particles" id="magic-particles"></div>
+        
+        <!-- Advanced SVG-based avatar -->
+        <div class="ai-avatar" id="ai-avatar">                
+          <!-- Main card with SVG-based character -->
+          <div class="ai-avatar-card">
+            <!-- Advanced SVG character face -->
+              <div class="ai-avatar-face">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <!-- Radial gradient for the face -->
+                    <radialGradient id="face-gradient" cx="50%" cy="50%" r="70%" fx="30%" fy="30%">
+                      <stop offset="0%" stop-color="#f0f9ff" />
+                      <stop offset="70%" stop-color="#e0f2fe" />
+                      <stop offset="100%" stop-color="#bae6fd" />
+                    </radialGradient>
+                    
+                    <!-- Radial gradient for the eyes -->
+                    <radialGradient id="eye-gradient" cx="50%" cy="50%" r="80%" fx="20%" fy="20%">
+                      <stop offset="0%" stop-color="#ffffff" />
+                      <stop offset="85%" stop-color="#f0f9ff" />
+                      <stop offset="100%" stop-color="#e0f2fe" />
+                    </radialGradient>
+                    
+                    <!-- Radial gradient for pupils -->
+                    <radialGradient id="pupil-gradient" cx="50%" cy="50%" r="90%">
+                      <stop offset="0%" stop-color="#1e3a8a" />
+                      <stop offset="90%" stop-color="#1e40af" />
+                    </radialGradient>
+                    
+                    <!-- Sparkle effect mask -->
+                    <mask id="face-sparkle-mask">
+                      <rect width="100" height="100" fill="white" />
+                      <circle cx="35" cy="35" r="5" fill="black" />
+                      <circle cx="65" cy="35" r="5" fill="black" />
+                      <circle cx="75" cy="65" r="3" fill="black" />
+                      <circle cx="25" cy="65" r="3" fill="black" />
+                    </mask>
+                    
+                    <!-- Clip path for the face shape -->
+                    <clipPath id="face-clip">
+                      <circle cx="50" cy="50" r="45" />
+                    </clipPath>
+                    
+                    <!-- Pattern for the background texture -->
+                    <pattern id="magic-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                      <circle cx="10" cy="10" r="1.5" fill="#93c5fd" fill-opacity="0.5" />
+                      <circle cx="5" cy="5" r="1" fill="#818cf8" fill-opacity="0.4" />
+                      <circle cx="15" cy="15" r="1" fill="#c4b5fd" fill-opacity="0.4" />
+                    </pattern>
+                  </defs>
+                  
+                  <!-- Face background with clip path -->
+                  <g clip-path="url(#face-clip)">
+                    <!-- Base face color -->
+                    <circle cx="50" cy="50" r="45" fill="url(#face-gradient)" />
+                    
+                    <!-- Pattern overlay with blend mode -->
+                    <rect x="0" y="0" width="100" height="100" fill="url(#magic-pattern)" 
+                          style="mix-blend-mode: overlay;" />
+                    
+                    <!-- Light reflection -->
+                    <ellipse cx="35" cy="35" rx="25" ry="20" fill="white" opacity="0.2" 
+                             style="mix-blend-mode: soft-light;" />
+                  </g>
+                  
+                  <!-- Eyes group -->
+                  <g>
+                    <!-- Left eye -->
+                    <circle cx="35" cy="40" r="10" fill="url(#eye-gradient)" stroke="#bae6fd" stroke-width="1" />
+                    <circle cx="35" cy="40" r="5" fill="url(#pupil-gradient)" />
+                    <circle cx="32" cy="38" r="2" fill="white" opacity="0.8" />
+                    
+                    <!-- Right eye -->
+                    <circle cx="65" cy="40" r="10" fill="url(#eye-gradient)" stroke="#bae6fd" stroke-width="1" />
+                    <circle cx="65" cy="40" r="5" fill="url(#pupil-gradient)" />
+                    <circle cx="62" cy="38" r="2" fill="white" opacity="0.8" />
+                  </g>
+                  
+                  <!-- Smile -->
+                  <path d="M 35 65 Q 50 80 65 65" stroke="#1e40af" stroke-width="3" fill="none" 
+                        stroke-linecap="round" />
+                  
+                  <!-- Extra details - blush -->
+                  <circle cx="30" cy="55" r="5" fill="#fda4af" opacity="0.2" />
+                  <circle cx="70" cy="55" r="5" fill="#fda4af" opacity="0.2" />
+                  
+                  <!-- Magical sparkles on face -->
+                  <g mask="url(#face-sparkle-mask)">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="#a5b4fc" stroke-width="2" 
+                            stroke-dasharray="2,3" />
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Magician's hat - keeping this as requested -->
+          <div class="ai-avatar-hat">
+            <svg viewBox="0 0 140 100" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="magic-hat-gradient" cx="50%" cy="50%" r="65%" fx="30%" fy="30%">
+                  <stop offset="0%" stop-color="#581C87" />
+                  <stop offset="60%" stop-color="#4C1D95" />
+                  <stop offset="100%" stop-color="#2E1065" />
+                </radialGradient>
+                <linearGradient id="hat-band-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#6366F1" />
+                  <stop offset="50%" stop-color="#A855F7" />
+                  <stop offset="100%" stop-color="#EC4899" />
+                </linearGradient>
+                <filter id="hat-glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+                </filter>
+                <filter id="star-glow" x="-100%" y="-100%" width="300%" height="300%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" />
+                </filter>
+              </defs>
+              
+              <!-- Hat base/brim -->
+              <ellipse cx="70" cy="70" rx="55" ry="15" fill="#1E1B4B" filter="url(#hat-glow)" />
+              
+              <!-- Hat cone -->
+              <path d="M35,70 L105,70 L85,15 L55,15 Z" fill="url(#magic-hat-gradient)" 
+                stroke="#6D28D9" stroke-width="2" />
+              
+              <!-- Hat band -->
+              <path d="M32,65 C40,72 100,72 108,65 C100,78 40,78 32,65 Z" 
+                fill="url(#hat-band-gradient)" stroke="#C4B5FD" stroke-width="0.5" />
+              
+              <!-- Stars and magic dust -->
+              <g filter="url(#star-glow)">
+                <!-- Large star -->
+                <path d="M70,30 L73,25 L76,30 L82,31 L77,35 L78,41 L73,38 L68,41 L69,35 L64,31 Z" 
+                  fill="#F9A8D4" opacity="0.9" />
+                
+                <!-- Small stars -->
+                <path d="M85,40 L87,37 L89,40 L92,41 L89,43 L90,46 L87,45 L84,46 L85,43 L82,41 Z" 
+                  fill="#F0ABFC" opacity="0.7" />
+                <path d="M50,45 L52,42 L54,45 L57,46 L54,48 L55,51 L52,50 L49,51 L50,48 L47,46 Z" 
+                  fill="#D8B4FE" opacity="0.7" />
+                
+                <!-- Magic dust/sparkles -->
+                <circle cx="60" cy="25" r="1.5" fill="#FFFFFF" opacity="0.9" />
+                <circle cx="90" cy="55" r="1" fill="#FFFFFF" opacity="0.8" />
+                <circle cx="45" cy="35" r="1" fill="#FFFFFF" opacity="0.7" />
+                <circle cx="75" cy="45" r="1.5" fill="#FFFFFF" opacity="0.9" />
+                <circle cx="55" cy="55" r="1" fill="#FFFFFF" opacity="0.8" />
+              </g>
+            </svg>
+          </div>
+          
+          <!-- Magic wand - keeping this as requested -->
+          <div class="ai-avatar-wand">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="wand-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#4F46E5" />
+                  <stop offset="100%" stop-color="#7E22CE" />
+                </linearGradient>
+                <linearGradient id="wand-tip-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#E879F9" />
+                  <stop offset="100%" stop-color="#F9A8D4" />
+                </linearGradient>
+                <filter id="wand-glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+                </filter>
+              </defs>
+              
+              <!-- Wand handle -->
+              <rect x="20" y="30" width="50" height="10" rx="5" fill="url(#wand-gradient)" 
+                transform="rotate(45, 45, 35)" stroke="#C4B5FD" stroke-width="0.5" />
+              
+              <!-- Wand tip with glow -->
+              <circle cx="20" cy="60" r="7" fill="url(#wand-tip-gradient)" 
+                filter="url(#wand-glow)" transform="rotate(45, 45, 35)" />
+              
+              <!-- Magic sparkles -->
+              <circle cx="15" cy="65" r="1" fill="#FFFFFF" opacity="0.9" 
+                transform="rotate(45, 45, 35)" />
+              <circle cx="25" cy="65" r="1" fill="#FFFFFF" opacity="0.9" 
+                transform="rotate(45, 45, 35)" />
+              <circle cx="20" cy="70" r="1" fill="#FFFFFF" opacity="0.9" 
+                transform="rotate(45, 45, 35)" />
+            </svg>
+          </div>
+          
+          <!-- Speech bubble with welcome message -->
+          <div class="ai-avatar-speech-bubble">
+            <div id="ai-avatar-speech">
+              <div id="message-part-1" style="display: none;">
+                <span class="speech-icon">✨</span> <span>Hi! Welcome to Safety Compliance Detection System.</span>
+              </div>
+              <div id="message-part-2" style="display: none;">
+                <span class="speech-icon">🔮</span> <span>Let me transform your safety systems with a <span class="magic-text">touch of magic</span>.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        // Update gradient backgrounds - only color changes, no other styles
-        const gradientBgs = document.querySelectorAll(".gradient-bg");
-        gradientBgs.forEach((bg) => {
-          if (animate) {
-            bg.style.transition = "background-image 0.7s ease";
-          }
-          bg.style.backgroundImage = `var(--primary-gradient)`;
-        });
+    <script>
+      // Initialize EmailJS
+      (function() {
+        if (typeof emailjs !== 'undefined') {
+          emailjs.init("aDbULo3A8FqiHm2T_");
+        }
+      })();
 
-        // Update purple gradient backgrounds - only color changes, no other styles
-        const purpleGradientBgs = document.querySelectorAll(
-          ".purple-gradient-bg",
-        );
-        purpleGradientBgs.forEach((bg) => {
-          if (animate) {
-            bg.style.transition = "background-image 0.7s ease";
-          }
-          bg.style.backgroundImage = `var(--secondary-gradient)`;
-        });
-
-        // Update blue-indigo gradient backgrounds - only color changes, no other styles
-        const blueIndigoGradientBgs = document.querySelectorAll(
-          ".blue-indigo-gradient-bg",
-        );
-        blueIndigoGradientBgs.forEach((bg) => {
-          if (animate) {
-            bg.style.transition = "background-image 0.7s ease";
-          }
-          bg.style.backgroundImage = `var(--primary-gradient)`;
-        });
+      // Email validation function
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+      
+      // Toast notification function
+      function showToast(message, type = 'info') {
+        const existingToast = document.querySelector('.toast-notification');
+        if (existingToast) {
+          existingToast.remove();
+        }
+        
+        const toast = document.createElement('div');
+        toast.className = `toast-notification toast-${type}`;
+        toast.innerHTML = `
+          <div class="toast-content">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+            <span>${message}</span>
+          </div>
+        `;
+        
+        toast.style.cssText = `
+          position: fixed;
+          top: 80px;
+          right: 20px;
+          background: ${type === 'success' ? 'rgba(34, 197, 94, 0.9)' : 'rgba(239, 68, 68, 0.9)'};
+          color: white;
+          padding: 16px 24px;
+          border-radius: 8px;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+          z-index: 1000;
+          backdrop-filter: blur(10px);
+          border: 1px solid ${type === 'success' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'};
+          transform: translateX(400px);
+          transition: transform 0.3s ease;
+        `;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+          toast.style.transform = 'translateX(0)';
+        }, 100);
+        
+        setTimeout(() => {
+          toast.style.transform = 'translateX(400px)';
+          setTimeout(() => {
+            if (toast.parentNode) {
+              toast.parentNode.removeChild(toast);
+            }
+          }, 300);
+        }, 5000);
       }
 
-      // Initial update of mood elements
-      updateMoodElements();
+      // Contact form functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const contactForm = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        if (contactForm) {
+          contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+            
+            document.querySelectorAll('.form-error').forEach(error => {
+              error.style.display = 'none';
+            });
+            
+            let isValid = true;
+            
+            if (!name) {
+              const nameError = document.getElementById('nameError');
+              if (nameError) nameError.style.display = 'block';
+              isValid = false;
+            }
+            
+            if (!email || !validateEmail(email)) {
+              const emailError = document.getElementById('emailError');
+              if (emailError) emailError.style.display = 'block';
+              isValid = false;
+            }
+            
+            if (!message) {
+              const messageError = document.getElementById('messageError');
+              if (messageError) messageError.style.display = 'block';
+              isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            if (submitBtn) {
+              submitBtn.disabled = true;
+              submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            }
+            
+            const templateParams = {
+              from_name: name,
+              from_email: email,
+              message: message
+            };
+            
+            if (typeof emailjs !== 'undefined') {
+              emailjs.send('service_ewftsvm', 'template_qvskz0q', templateParams)
+                .then(function(response) {
+                  showToast('Message sent successfully! We will get back to you soon.', 'success');
+                  contactForm.reset();
+                  window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                  });
+                })
+                .catch(function(error) {
+                  showToast('Failed to send message. Please try again later.', 'error');
+                  console.error('EmailJS error:', error);
+                })
+                .finally(function() {
+                  if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Contact Me';
+                  }
+                });
+            } else {
+              showToast('Email service not available. Please try again later.', 'error');
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Contact Me';
+              }
+            }          });
+        }
+      });
 
-      // Handle theme switch
-      const themeCheckbox = document.getElementById("checkbox");
-      const savedTheme = localStorage.getItem("theme");
-
-      // Set initial theme state
-      if (savedTheme === "light") {
-        document.body.setAttribute("data-theme", "light");
-        themeCheckbox.checked = true;
-      } else {
-        document.body.setAttribute("data-theme", "dark");
-        themeCheckbox.checked = false;
-      }
-
-      // Theme toggle
-      themeCheckbox.addEventListener("change", () => {
-        if (themeCheckbox.checked) {
-          document.body.setAttribute("data-theme", "light");
-          localStorage.setItem("theme", "light");
-        } else {
-          document.body.setAttribute("data-theme", "dark");
-          localStorage.setItem("theme", "dark");
+      // Enhanced logo interactions
+      document.addEventListener('DOMContentLoaded', function() {
+        const logo = document.querySelector('.header-logo');
+        const logoContainer = document.querySelector('.logo-container');
+        const headerText = document.querySelector('.header-text h1');
+        
+        if (logo && logoContainer && headerText) {
+          // Create dynamic sparkle effects
+          function createSparkle(x, y) {
+            const sparkle = document.createElement('div');
+            sparkle.style.position = 'absolute';
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            sparkle.style.width = '4px';
+            sparkle.style.height = '4px';
+            sparkle.style.background = 'radial-gradient(circle, #60A5FA, transparent)';
+            sparkle.style.borderRadius = '50%';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.animation = 'sparkle 1s ease-out forwards';
+            sparkle.style.zIndex = '1000';
+            
+            logoContainer.appendChild(sparkle);
+            
+            setTimeout(() => {
+              if (sparkle.parentNode) {
+                sparkle.parentNode.removeChild(sparkle);
+              }
+            }, 1000);
+          }
+          
+          // Add sparkle keyframes dynamically
+          const sparkleStyle = document.createElement('style');
+          sparkleStyle.textContent = `
+            @keyframes sparkle {
+              0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 1;
+              }
+              50% {
+                transform: scale(1.5) rotate(180deg);
+                opacity: 0.8;
+              }
+              100% {
+                transform: scale(0) rotate(360deg);
+                opacity: 0;
+              }
+            }
+          `;
+          document.head.appendChild(sparkleStyle);
+          
+          // Logo click interaction
+          logo.addEventListener('click', function(e) {
+            // Create multiple sparkles
+            for (let i = 0; i < 6; i++) {
+              setTimeout(() => {
+                const rect = logoContainer.getBoundingClientRect();
+                const x = Math.random() * rect.width;
+                const y = Math.random() * rect.height;
+                createSparkle(x, y);
+              }, i * 100);
+            }
+            
+            // Trigger a special animation on the header text
+            headerText.style.animation = 'none';
+            headerText.offsetHeight; // Trigger reflow
+            headerText.style.animation = 'gradientFlow 1s ease';
+          });
+          
+          // Continuous subtle background animation
+          let animationFrame;
+          function animateBackground() {
+            const time = Date.now() * 0.001;
+            const intensity = 0.5 + Math.sin(time) * 0.2;
+            
+            logo.style.filter = `
+              drop-shadow(0 0 ${10 + intensity * 4}px rgba(59, 130, 246, ${0.3 + intensity * 0.2}))
+              drop-shadow(0 0 ${20 + intensity * 8}px rgba(168, 85, 247, ${0.2 + intensity * 0.15}))
+            `;
+            
+            animationFrame = requestAnimationFrame(animateBackground);
+          }
+          
+          // Start background animation
+          animateBackground();
+          
+          // Pause animation when tab is not visible
+          document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+              cancelAnimationFrame(animationFrame);
+            } else {
+              animateBackground();
+            }
+          });
         }
       });
     </script>

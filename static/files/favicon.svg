@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Safety shield background -->
+  <defs>
+    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#A855F7;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="checkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Shield shape -->
+  <path d="M16 2 L6 6 L6 16 Q6 24 16 30 Q26 24 26 16 L26 6 Z" 
+        fill="url(#shieldGradient)" 
+        stroke="#1E293B" 
+        stroke-width="0.5"/>
+  
+  <!-- Safety checkmark -->
+  <path d="M10 16 L14 20 L22 12" 
+        stroke="url(#checkGradient)" 
+        stroke-width="2.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        fill="none"/>
+  
+  <!-- Small safety dots for compliance -->
+  <circle cx="11" cy="10" r="1" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="21" cy="10" r="1" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="16" cy="8" r="1" fill="#FFFFFF" opacity="0.8"/>
+</svg>

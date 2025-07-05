@@ -1,0 +1,77 @@
+@startuml Results and Activity Management Workflow
+!theme plain
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam activityBorderColor #2C3E50
+skinparam activityStartColor #27AE60
+skinparam activityEndColor #E74C3C
+skinparam activityArrowColor #34495E
+
+title Results and Activity Management Workflow
+
+start
+:Complete detection session;
+:Store detection results;
+
+if (Access results via) then (Real-time Counts)
+  :View live charts and statistics;
+  :Monitor detection trends;
+
+elseif (Detection APIs)
+  :Call count endpoints;
+  :Get detection data;
+  :Integrate with applications;
+
+elseif (Tracking Logs)
+  :Access detailed tracking data;
+  :Review frame-by-frame results;
+  :Download for analysis;
+
+else (Processed Files)
+  :Access output directory;
+  :Download processed videos;
+  :Review detection overlays;
+
+endif
+
+if (System Management) then (Reset Data)
+  :Reset detection counts;
+  :Clear tracking logs;
+  :Start fresh session;
+
+elseif (Toggle CUDA)
+  :Check CUDA availability;
+  
+  if (CUDA available?) then (yes)
+    :Update processing mode;
+    :Experience faster processing;
+    
+  else (no)
+    :Keep CUDA disabled;
+  endif
+
+else (Database Logs)
+  if (Admin user?) then (yes)
+    :View system statistics;
+    :Generate reports;
+    :Export analytics data;
+    
+  else (no)
+    :View personal history;
+    :Review own sessions;
+  endif
+
+endif
+
+:Continue using system or logout;
+
+if (Session continues?) then (yes)
+  :Return to main application;
+else (no)
+  :Log logout activity;
+  :Clear session data;
+  stop
+endif
+
+stop
+@enduml
